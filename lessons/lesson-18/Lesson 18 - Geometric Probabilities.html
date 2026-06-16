@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 18 — Geometric Probabilities (Interactive)</title>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+:root{
+  --space:#050a18; --deep:#0a1628; --card:#0f1f3d; --accent:#3b82f6; --accent2:#f59e0b;
+  --green:#22c55e; --red:#ef4444; --purple:#a855f7; --text:#e2e8f0; --muted:#94a3b8;
+  --border:#1e3a5f; --glow:rgba(59,130,246,0.25);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--space);color:var(--text);line-height:1.7;}
+canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* nav */
+#topbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(5,10,24,0.92);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:8px 16px;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+#topbar .logo{font-weight:800;color:var(--accent);white-space:nowrap;font-size:0.95rem;}
+#topbar nav{display:flex;gap:6px;flex-wrap:wrap;}
+#topbar a{font-size:0.78rem;color:var(--muted);text-decoration:none;padding:3px 9px;border-radius:8px;
+  border:1px solid transparent;transition:.2s;}
+#topbar a:hover{color:var(--text);border-color:var(--border);background:rgba(59,130,246,.1);}
+
+.wrap{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:80px 18px 80px;}
+.hero{text-align:center;padding:30px 10px 10px;}
+.hero h1{font-size:clamp(1.9rem,5vw,3rem);font-weight:800;line-height:1.15;margin-bottom:10px;}
+.hero h1 span{color:var(--accent);}
+.hero p{color:var(--muted);max-width:680px;margin:0 auto;}
+
+h2.sec{font-size:1.7rem;margin:46px 0 6px;border-left:5px solid var(--accent);padding-left:14px;}
+h3.ex{font-size:1.25rem;color:var(--accent2);margin:30px 0 6px;}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 26px;margin:16px 0;}
+.card.glow{box-shadow:0 0 30px var(--glow);}
+.card.amber{border-color:var(--accent2);background:rgba(245,158,11,.07);}
+.card.green{border-color:var(--green);background:rgba(34,197,94,.07);}
+.card.purple{border-color:var(--purple);background:rgba(168,85,247,.08);}
+.card.prob{border-color:var(--accent);background:rgba(59,130,246,.07);}
+
+.tag{display:inline-block;background:rgba(59,130,246,.15);border:1px solid var(--accent);color:var(--accent);
+  border-radius:20px;padding:3px 12px;font-size:.72rem;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;margin-bottom:10px;}
+.tag.src{background:rgba(245,158,11,.12);border-color:var(--accent2);color:var(--accent2);}
+
+.formula{background:rgba(59,130,246,.1);border:2px solid var(--accent);border-radius:12px;
+  padding:14px 18px;text-align:center;margin:14px 0;overflow-x:auto;}
+
+.method{border:1px solid var(--accent2);background:rgba(245,158,11,.08);border-radius:14px;
+  padding:16px 20px;margin:14px 0;}
+.method .h{font-weight:800;color:var(--accent2);margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+.method b{color:var(--text);}
+
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:10px;font-size:.88rem;
+  font-weight:600;cursor:pointer;transition:.2s;border:none;background:var(--accent);color:#fff;}
+.btn:hover{background:#2563eb;transform:translateY(-1px);}
+.btn.ghost{background:transparent;border:1.5px solid var(--accent);color:var(--accent);}
+.btn.ghost:hover{background:rgba(59,130,246,.12);}
+.btn.amber{background:var(--accent2);}
+.btn.amber:hover{background:#d97706;}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+
+.reveal{display:none;margin-top:12px;animation:fade .4s ease;}
+.reveal.show{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+.steps{counter-reset:s;}
+.stepline{display:flex;gap:12px;margin:10px 0;align-items:flex-start;}
+.stepline .n{counter-increment:s;background:var(--accent);color:#fff;border-radius:50%;width:28px;height:28px;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;}
+.stepline .n::before{content:counter(s);}
+.stepline .b{flex:1;}
+
+.simwrap{display:flex;flex-direction:column;align-items:center;gap:8px;margin:12px 0;}
+canvas.sim{max-width:100%;border-radius:12px;border:1px solid var(--border);background:#071021;display:block;}
+.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center;margin:6px 0;}
+.controls label{font-size:.82rem;color:var(--muted);}
+input[type=range]{accent-color:var(--accent);width:200px;max-width:60vw;}
+.val{color:var(--accent);font-weight:700;}
+.readout{font-size:.9rem;color:var(--muted);text-align:center;}
+.readout b{color:var(--accent2);}
+.cap{font-size:.8rem;color:var(--muted);text-align:center;max-width:560px;margin:0 auto;}
+
+.thinkbar{display:flex;flex-direction:column;gap:6px;width:100%;max-width:560px;margin:6px auto;}
+.thinkstep{padding:9px 13px;border:1px solid var(--border);border-radius:10px;background:var(--deep);
+  font-size:.86rem;color:var(--muted);transition:.3s;opacity:.45;}
+.thinkstep.active{opacity:1;border-color:var(--accent);background:rgba(59,130,246,.12);color:var(--text);
+  box-shadow:0 0 14px var(--glow);}
+.thinkstep.done{opacity:.85;border-color:var(--green);color:#bbf7d0;}
+.thinkstep b{color:var(--accent2);}
+
+.answer{display:inline-block;background:rgba(34,197,94,.15);border:1px solid var(--green);color:#86efac;
+  padding:3px 12px;border-radius:8px;font-weight:700;}
+.choices{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0;}
+.choice{padding:6px 14px;border:1.5px solid var(--border);border-radius:9px;background:var(--deep);
+  cursor:pointer;font-size:.9rem;transition:.2s;color:var(--text);}
+.choice:hover{border-color:var(--accent);}
+.choice.correct{border-color:var(--green);background:rgba(34,197,94,.15);color:#86efac;}
+.choice.wrong{border-color:var(--red);background:rgba(239,68,68,.15);color:#fca5a5;}
+
+table.cheat{width:100%;border-collapse:collapse;font-size:.86rem;margin:10px 0;}
+table.cheat th{text-align:left;padding:8px 10px;color:var(--accent);border-bottom:2px solid var(--border);}
+table.cheat td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.06);vertical-align:top;}
+table.cheat tr:hover{background:rgba(59,130,246,.06);}
+
+.hw{background:var(--deep);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin:12px 0;}
+.hwnum{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:.78rem;font-weight:700;
+  display:inline-block;margin-bottom:8px;}
+.pill{display:inline-block;font-size:.72rem;padding:2px 9px;border-radius:20px;margin-left:6px;
+  background:rgba(168,85,247,.15);border:1px solid var(--purple);color:#d8b4fe;}
+hr.div{border:none;border-top:1px solid var(--border);margin:30px 0;}
+a.up{color:var(--accent);text-decoration:none;font-size:.8rem;}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+
+<div id="topbar">
+  <div class="logo">📐 Geometric Probability</div>
+  <nav>
+    <a href="#idea">Big Idea</a>
+    <a href="#s1">§1 Lengths</a>
+    <a href="#ex13">★ Whose # is bigger</a>
+    <a href="#s2">§2 Areas</a>
+    <a href="#hw">Homework</a>
+    <a href="#cheat">Cheat Sheet</a>
+  </nav>
+</div>
+
+<div class="wrap">
+
+<div class="hero">
+  <div class="tag">Lesson 18 · AMC 10 Camp</div>
+  <h1>Geometric <span>Probabilities</span></h1>
+  <p>When outcomes are infinite, we stop <em>counting</em> and start <em>measuring</em> — with length, area, and volume. Drag the sliders, run the simulations, and watch the thinking path light up.</p>
+</div>
+
+<!-- ════════ BIG IDEA ════════ -->
+<h2 class="sec" id="idea">The Big Idea</h2>
+<div class="card glow amber">
+  <p style="color:var(--text);font-size:1.05rem;">Geometric probability is used when there are <b style="color:#fff">infinitely many equally‑likely outcomes</b>. We can't list them, so we <b style="color:#fff">measure</b> them instead.</p>
+  <div class="formula">\[ P(\text{event})=\frac{\text{measure of the successful region}}{\text{measure of the whole sample region}} \]</div>
+  <p style="color:var(--text);">The #1 skill: <b style="color:#fff">turn the words into a picture</b> of the sample space, shade the "success" part, then take the ratio.</p>
+</div>
+
+<div class="card">
+  <h3 style="color:var(--accent);margin-bottom:8px;">How many random quantities? → which measure?</h3>
+  <table class="cheat">
+    <tr><th>Random quantities</th><th>Sample space looks like</th><th>Measure</th></tr>
+    <tr><td>1 (one number / one cut / one arrival time)</td><td>an <b>interval</b> (a line segment)</td><td><b style="color:var(--accent2)">length</b></td></tr>
+    <tr><td>2 (two numbers / two cuts)</td><td>a <b>square / region</b> in the plane</td><td><b style="color:var(--accent2)">area</b></td></tr>
+    <tr><td>3 (three numbers)</td><td>a <b>cube / solid</b></td><td><b style="color:var(--accent2)">volume</b></td></tr>
+    <tr><td>a random <b>point in a shape</b></td><td>the <b>shape</b> itself</td><td><b style="color:var(--accent2)">area</b> (or arc length on a curve)</td></tr>
+  </table>
+</div>
+
+<!-- ════════ CONCEPT QUESTION ════════ -->
+<div class="card prob">
+  <span class="tag">Concept Check</span>
+  <p style="color:var(--text);"><b style="color:#fff">Which one is a <em>geometric</em> probability case?</b> (Tap a choice.)</p>
+  <div style="font-size:.92rem;color:var(--muted);margin-bottom:8px;">
+    A. Choose \(a,b\) from \(\{1,2,3,4\}\) (no repeats); \(P(x^2+2ax+b=0\) has a real root\()\).<br>
+    B. \(a,b\) satisfy \(|a|<2,\ |b|<3\); \(P(x^2+2ax+b=0\) has a real root\()\).<br>
+    C. Pick 2 people from \(\{A,B,C\}\); \(P(A\) is chosen\()\).<br>
+    D. \(P(\)Jack and Austen share a birthday\()\).
+  </div>
+  <div class="choices" id="cq">
+    <div class="choice" data-ok="0">A</div>
+    <div class="choice" data-ok="1">B</div>
+    <div class="choice" data-ok="0">C</div>
+    <div class="choice" data-ok="0">D</div>
+  </div>
+  <div class="reveal" id="cq-fb"></div>
+  <div class="method">
+    <div class="h">🔑 TYPE — Classify the probability model</div>
+    <b>METHOD:</b> Ask "<b>finite list, or continuous range?</b>" Finite/countable ⇒ <b>classical</b> (count). Continuous (real numbers, points, length, time) ⇒ <b>geometric</b> (measure). Trigger words: <i>"uniformly at random, interval, random point, any position, arrives at a random time."</i> Only <b>B</b> has \(a,b\) ranging over a continuous region → answer <span class="answer">B</span>.
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     SECTION 1 — LENGTHS
+     ════════════════════════════════════════════════════════ -->
+<h2 class="sec" id="s1">Section 1 — Probability Using Lengths</h2>
+<div class="formula">\[ P=\frac{\text{length of successful region}}{\text{length of possible region}} \]</div>
+
+<!-- Example 1.1 -->
+<h3 class="ex">Example 1.1 — Cut a segment so both parts are long enough</h3>
+<div class="card amber"><p style="color:var(--text);margin:0;">A segment of length 1 is cut at a random point. Find \(P(\text{both parts}\ge \tfrac13)\). <b>Drag the cut</b> below.</p></div>
+<div class="card">
+  <div class="simwrap">
+    <canvas id="c-seg" class="sim" width="700" height="150"></canvas>
+    <div class="controls">
+      <label>Cut position \(x\): <span class="val" id="seg-x">0.50</span></label>
+      <input type="range" id="seg-slider" min="0" max="1" step="0.001" value="0.5">
+    </div>
+    <div class="readout" id="seg-read"></div>
+    <div class="cap">Green band = the success window where <b>both</b> pieces are \(\ge\tfrac13\). The cut wins only when it lands inside it.</div>
+  </div>
+  <button class="btn ghost" onclick="rev('sol11')">Show step‑by‑step ▸</button>
+  <div class="reveal" id="sol11">
+    <div class="steps">
+      <div class="stepline"><div class="n"></div><div class="b">Let the cut be \(x\sim\text{Uniform}[0,1]\). Sample space length \(=1\).</div></div>
+      <div class="stepline"><div class="n"></div><div class="b">Pieces are \(x\) and \(1-x\). Need <b>both</b> \(\ge\tfrac13\): \(x\ge\tfrac13\) and \(1-x\ge\tfrac13\Rightarrow \tfrac13\le x\le\tfrac23\).</div></div>
+      <div class="stepline"><div class="n"></div><div class="b">Success length \(=\tfrac23-\tfrac13=\tfrac13\). So \(P=\dfrac{1/3}{1}=\) <span class="answer">1/3</span>.</div></div>
+    </div>
+  </div>
+  <div class="method">
+    <div class="h">🔑 TYPE — One random cut on a segment (1 variable → length)</div>
+    <b>METHOD:</b> Let the cut \(=x\) on \([0,1]\). Write <b>each condition as an inequality in \(x\)</b>, intersect them into one sub‑interval, then \(P=\dfrac{\text{sub-interval length}}{\text{total length}}\).
+  </div>
+</div>
+
+<!-- Example 1.2 -->
+<h3 class="ex">Example 1.2 — Where is an inequality satisfied?</h3>
+<div class="card amber"><p style="color:var(--text);margin:0;">\(x\) is chosen at random on \([-5,5]\). Find \(P(x^2-x-2>0)\).</p></div>
+<div class="card">
+  <div class="simwrap">
+    <canvas id="c-line" class="sim" width="700" height="160"></canvas>
+    <div class="cap">The number line \([-5,5]\). Green = where \((x-2)(x+1)>0\). The parabola above shows when it's positive (above the axis).</div>
+  </div>
+  <button class="btn ghost" onclick="rev('sol12')">Show step‑by‑step ▸</button>
+  <div class="reveal" id="sol12">
+    <div class="steps">
+      <div class="stepline"><div class="n"></div><div class="b">Total length \(=10\).</div></div>
+      <div class="stepline"><div class="n"></div><div class="b">Factor: \(x^2-x-2=(x-2)(x+1)>0\Rightarrow x<-1\) or \(x>2\).</div></div>
+      <div class="stepline"><div class="n"></div><div class="b">Intersect with \([-5,5]\): \([-5,-1)\) length \(4\), and \((2,5]\) length \(3\). Total \(=7\).</div></div>
+      <div class="stepline"><div class="n"></div><div class="b">\(P=\dfrac{7}{10}=\) <span class="answer">0.7</span>.</div></div>
+    </div>
+  </div>
+  <div class="method">
+    <div class="h">🔑 TYPE — One random number, condition = an inequality</div>
+    <b>METHOD:</b> Total length = interval length. <b>Solve the inequality</b> to find which sub‑intervals work, <b>intersect with the given interval</b>, add their lengths, divide.
+  </div>
+</div>
+
+<!-- ════════ EXAMPLE 1.3 — THE STAR ════════ -->
+<h3 class="ex" id="ex13">★ Example 1.3 — "Whose number is bigger?" <span class="pill">2017 AMC 10A #15</span></h3>
+<div class="card amber"><p style="color:var(--text);margin:0;">Chloé picks a real number uniformly from \([0,2017]\); Laurent picks uniformly from \([0,4034]\). Find \(P(\text{Laurent}>\text{Chloé})\).</p></div>
+
+<div class="card glow">
+  <p style="color:var(--text);"><b style="color:var(--accent2)">The thinking path.</b> Two random numbers ⇒ <b style="color:#fff">2‑D area model</b>. Step through it — the diagram and the checklist light up together.</p>
+  <div class="simwrap">
+    <canvas id="c-rect" class="sim" width="420" height="460"></canvas>
+    <div class="thinkbar" id="rect-think">
+      <div class="thinkstep" data-s="0"><b>Step 1.</b> Draw the sample space: a rectangle. Chloé \(C\) is the width \([0,2017]\); Laurent \(L\) is the height \([0,4034]\). It is <b>twice as tall as wide</b>.</div>
+      <div class="thinkstep" data-s="1"><b>Step 2.</b> The event \(L>C\) is split by the line \(L=C\). This line only reaches up to \(L=2017\) — it dies halfway up.</div>
+      <div class="thinkstep" data-s="2"><b>Step 3.</b> The <b>entire top band</b> \(2017\le L\le 4034\) always has \(L>C\). Area \(=2017^2\). (Free win!)</div>
+      <div class="thinkstep" data-s="3"><b>Step 4.</b> The bottom square is cut by \(L=C\) into two equal triangles. The <b>upper</b> one is \(L>C\): area \(=\tfrac12\,2017^2\).</div>
+      <div class="thinkstep" data-s="4"><b>Step 5.</b> Success \(=2017^2+\tfrac12 2017^2=\tfrac32 2017^2\). Total \(=2017\cdot4034=2\cdot2017^2\). Ratio \(=\dfrac{3/2}{2}=\dfrac34\).</div>
+    </div>
+    <div class="controls">
+      <button class="btn ghost" id="rect-prev">◂ Back</button>
+      <button class="btn" id="rect-next">Next ▸</button>
+      <button class="btn amber" id="rect-mc">▶ Run 3000 random trials</button>
+    </div>
+    <div class="readout" id="rect-read">Empirical \(P(L>C)\): run the trials to watch it converge to <b>0.75</b>.</div>
+  </div>
+  <div class="card prob" style="margin-top:6px;">
+    <b style="color:#fff">Answer:</b> \(P=\dfrac{\tfrac32\,2017^2}{2\cdot2017^2}=\) <span class="answer">3/4</span> &nbsp;(<b>C</b>). Intuition: Laurent's range is bigger, so the probability beats \(\tfrac12\).
+  </div>
+  <div class="method">
+    <div class="h">🔑 TYPE — Two independent uniform numbers, compare them (area model)</div>
+    <b>METHOD:</b> Make a <b>rectangle</b> with the two ranges as the two axes. The condition (e.g. \(L>C\)) is a <b>line</b>; shade the correct side. \(P=\dfrac{\text{shaded area}}{\text{rectangle area}}\). The trick here is noticing the rectangle is \(1:2\), so the line "runs out" halfway and a whole band is a guaranteed win.
+  </div>
+</div>
+
+<!-- Example 1.4 -->
+<h3 class="ex">Example 1.4 — Random point on a circle: acute triangle</h3>
+<div class="card amber"><p style="color:var(--text);margin:0;">\(A,B\) lie on a circle of radius 2 with chord \(AB=2\). A point \(P\) is chosen at random on the circle. Find \(P(\triangle APB\text{ is acute})\). <b>Drag \(P\)</b> or press <b>Animate</b>.</p></div>
+<div class="card">
+  <div class="card prob" style="margin-top:0;">
+    <b style="color:#fff">First — what is \(\theta\), and where is it?</b> \(\theta\) is the <b>central angle</b> \(\angle AOB\) that the chord \(AB\) "opens up" at the center \(O\). The chord‑length formula gives it:
+    \[ AB=2R\sin\tfrac{\theta}{2}\;\Rightarrow\;2=2(2)\sin\tfrac{\theta}{2}\;\Rightarrow\;\sin\tfrac{\theta}{2}=\tfrac12\;\Rightarrow\;\theta=60^\circ. \]
+    So the arc \(AB\) is \(60^\circ\). <b style="color:var(--accent2)">That 60° wedge is drawn in gold at \(O\) below.</b>
+  </div>
+  <div class="simwrap">
+    <canvas id="c-circ" class="sim" width="440" height="470"></canvas>
+    <div class="controls">
+      <button class="btn amber" id="circ-anim">▶ Animate P</button>
+      <button class="btn ghost" id="circ-stop">⏸ Stop</button>
+    </div>
+    <div class="readout" id="circ-read"></div>
+    <div class="cap">Gold wedge at \(O\) = central angle <b>θ = 60°</b>. The two <b style="color:#7dd3fc">blue</b> points are the boundaries: at <b style="color:#7dd3fc">P₁</b> the angle \(\angle P_1AB=90^\circ\) (so \(AP_1\perp AB\)), and at <b style="color:#7dd3fc">P₂</b> the angle \(\angle P_2BA=90^\circ\) (so \(BP_2\perp AB\)). The triangle is acute <b>only when \(P\) is on the green arc between \(P_1\) and \(P_2\)</b> — drag past either one and that corner's angle jumps over \(90^\circ\). That valid arc is \(60^\circ\) → \(P=\tfrac16\).</div>
+  </div>
+  <button class="btn ghost" onclick="rev('sol14')">Show step‑by‑step ▸</button>
+  <div class="reveal" id="sol14">
+    <div class="steps">
+      <div class="stepline"><div class="n"></div><div class="b"><b>Find \(\theta\) (the gold wedge).</b> Chord \(AB=2R\sin\frac{\theta}{2}\): \(2=2(2)\sin\frac{\theta}{2}\Rightarrow \sin\frac{\theta}{2}=\tfrac12\Rightarrow\theta=60^\circ\). So minor arc \(AB=60^\circ\) and the inscribed angle at \(P\) (whenever \(P\) is on the big arc) is always \(\theta/2=30^\circ\).</div></div>
+      <div class="stepline"><div class="n"></div><div class="b"><b>Acute rule.</b> An inscribed angle \(=\tfrac12\) its opposite arc, so an angle \(<90^\circ\) ⇔ its opposite arc \(<180^\circ\). Acute ⇔ <b>all three</b> arcs \(<180^\circ\) ⇔ center \(O\) is inside the triangle.</div></div>
+      <div class="stepline"><div class="n"></div><div class="b"><b>Find the two boundary points.</b> The angle at \(A\) equals \(90^\circ\) when \(AP\perp AB\) — call that point \(P_1\). The angle at \(B\) equals \(90^\circ\) when \(BP\perp AB\) — call that \(P_2\). Both are drawn in blue. \(P\) gives an acute triangle <b>only between \(P_1\) and \(P_2\)</b>; outside, the angle at \(A\) or \(B\) exceeds \(90^\circ\). That arc is \(300-120-120=60^\circ\).</div></div>
+      <div class="stepline"><div class="n"></div><div class="b">\(P=\dfrac{60^\circ}{360^\circ}=\) <span class="answer">1/6</span>.</div></div>
+    </div>
+  </div>
+  <div class="method">
+    <div class="h">🔑 TYPE — Random point on a circle; acute/obtuse triangle</div>
+    <b>METHOD:</b> \(P=\dfrac{\text{favorable arc}}{360^\circ}\). Use the theorem: an inscribed triangle is <b>acute ⇔ all three arcs \(<180^\circ\)</b> (⇔ center inside). Convert each "acute" requirement into an arc inequality and add the allowed arc.
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     SECTION 2 — AREAS
+     ════════════════════════════════════════════════════════ -->
+<h2 class="sec" id="s2">Section 2 — Probability Using Areas</h2>
+<div class="formula">\[ P=\frac{\text{area of successful region}}{\text{area of total region}} \]</div>
+
+<!-- Example 2.1 -->
+<h3 class="ex">Example 2.1 — Cut a stick into three short pieces</h3>
+<div class="card amber"><p style="color:var(--text);margin:0;">A 1‑m stick is cut at two random points into three pieces. Find \(P(\text{every piece}<\tfrac12)\). <b>Drag the two cuts.</b></p></div>
+<div class="card">
+  <div class="card prob" style="margin-top:0;">
+    <b style="color:#fff">Why <u>area</u> and not length?</b> Count the random quantities. Here there are <b>two</b> independent cuts, \(x\) and \(y\). Two free numbers ⇒ we need <b>two axes</b> to draw every outcome ⇒ the sample space is a <b>2‑D square</b>, so we measure it with <b style="color:var(--accent2)">area</b>. (One random number would be a 1‑D segment → length; three would be a 3‑D cube → volume.)
+  </div>
+
+  <div class="simwrap">
+    <canvas id="c-stick21" class="sim" width="700" height="120"></canvas>
+    <div class="readout" id="stick21-read"></div>
+    <div class="cap">The stick with your two cuts. A piece turns <b style="color:#fca5a5">red</b> when it reaches \(\tfrac12\) — that's a losing cut.</div>
+  </div>
+
+  <div class="simwrap" style="margin-top:8px;">
+    <canvas id="c-sq21" class="sim" width="340" height="340"></canvas>
+    <div class="controls"><button class="btn amber" id="mc21">▶ Run 3000 random cuts</button></div>
+    <div class="readout" id="sq21-read"></div>
+    <div class="cap">Same situation as a <b>map</b>: every pair of cuts \((x,y)\) is one dot in this unit square. Green region = "all three pieces \(<\tfrac12\)". The white dot is <b>your</b> current cut. Empirical \(P\) → 1/4 = 0.25.</div>
+  </div>
+
+  <button class="btn ghost" onclick="rev('sol21')">Show step‑by‑step ▸</button>
+  <div class="reveal" id="sol21">
+    <div class="steps">
+      <div class="stepline"><div class="n"></div><div class="b"><b>Two random numbers → area.</b> Cut positions \(x,y\) are each uniform on \([0,1]\) and independent. Plot \(x\) across, \(y\) up: every outcome is a point in the <b>unit square</b>, total area \(=1\) (this is the denominator).</div></div>
+      <div class="stepline"><div class="n"></div><div class="b"><b>Name the pieces.</b> If the smaller cut is \(\ell=\min(x,y)\) and larger is \(h=\max(x,y)\), the three pieces are \(\ell,\; h-\ell,\; 1-h\).</div></div>
+      <div class="stepline"><div class="n"></div><div class="b"><b>Turn "each \(&lt;\tfrac12\)" into lines.</b> \(\ell<\tfrac12\), \(h-\ell<\tfrac12\), \(1-h<\tfrac12\) (i.e. \(h>\tfrac12\)). These are straight‑line boundaries, so the success set is a <b>region</b> — we take its area.</div></div>
+      <div class="stepline"><div class="n"></div><div class="b"><b>Shade and measure.</b> The region is <b>two triangles</b> (one for \(x<y\), one for \(x>y\)), each with legs \(\tfrac12\): area \(=2\cdot\tfrac12\cdot\tfrac12\cdot\tfrac12=\tfrac14\).</div></div>
+      <div class="stepline"><div class="n"></div><div class="b">\(P=\dfrac{\text{green area}}{\text{square area}}=\dfrac{1/4}{1}=\) <span class="answer">1/4</span>. (Bonus: "all pieces \(<\tfrac12\)" is exactly the condition the three pieces can form a triangle.)</div></div>
+    </div>
+  </div>
+  <div class="method">
+    <div class="h">🔑 TYPE — Two cuts on a stick (2 variables → area)</div>
+    <b>METHOD:</b> Count the random numbers first — <b>two ⇒ unit square ⇒ area</b>. Put the cuts as \((x,y)\), write each "piece \(<\tfrac12\)" as a line, shade the region, and divide its area by the square's area. Memorize the result: <b>3 pieces of a unit stick are all \(<\tfrac12\) (⇔ form a triangle) with probability \(\tfrac14\)</b>.
+  </div>
+</div>
+
+<!-- Example 2.2 -->
+<h3 class="ex">Example 2.2 — Three random points on a circle form an acute triangle</h3>
+<div class="card amber"><p style="color:var(--text);margin:0;">Pick 3 points at random on a circle. Find \(P(\text{triangle is acute})\). <b>Drag the three points.</b></p></div>
+<div class="card">
+  <div class="card prob" style="margin-top:0;">
+    <b style="color:#fff">Why area — and why this is secretly Example 2.1.</b> Fix one point (the circle looks the same after a rotation, so this is free). The other <b>two</b> points are two independent random angles ⇒ two free numbers ⇒ a <b>2‑D square</b> ⇒ <b style="color:var(--accent2)">area</b>. And here's the punch line: <b>cut the circle open at the fixed point and unroll it into a stick of length 1</b> — the other two points become two cuts, and the <b>three arcs become the three pieces</b>. So this is <u>exactly</u> the stick problem!
+  </div>
+
+  <div class="card prob" style="margin-top:0;">
+    <b style="color:#fff">Why "every arc \(&lt;\tfrac12\)" means acute — the inscribed‑angle theorem (same tool as 1.4).</b>
+    The three points cut the circle into three arcs. Each <b>corner</b> of the triangle is an <b>inscribed angle</b>, and the inscribed‑angle theorem says it equals <b>half the arc it opens onto</b> (the arc on the far side, between the other two points):
+    \[ \angle(\text{at point }1)=\tfrac12\,\overset{\frown}{23},\qquad \angle 2=\tfrac12\,\overset{\frown}{31},\qquad \angle 3=\tfrac12\,\overset{\frown}{12}. \]
+    A corner is \(<90^\circ\) exactly when its arc is \(<180^\circ\) — i.e. less than a <b>semicircle</b> (\(&lt;50\%\) of the circle). So:
+    \[ \text{acute (all 3 corners }&lt;90^\circ)\iff \text{all 3 arcs }&lt;\text{ a semicircle}. \]
+    In the diagram each corner now shows its live angle (= half its opposite arc); push any arc to \(50\%\) and that opposite corner hits \(90^\circ\) and turns red.
+  </div>
+
+  <div class="card prob" style="margin-top:6px;border-color:rgba(168,85,247,.5)">
+    <b style="color:#c4b5fd">Second way — the Example 1.4 trick: "is the center \(O\) inside the triangle?"</b>
+    There's a slicker geometric test that needs no angle arithmetic. A triangle inscribed in a circle is <b>acute ⇔ the center \(O\) lies inside it</b>. Reason: an arc reaches a full semicircle exactly when its chord passes through \(O\); if some arc is \(\ge\) a semicircle, the whole triangle sits on one side of that diameter, pushing \(O\) <b>outside</b> (and that corner becomes \(\ge 90^\circ\)). So "all arcs \(&lt;\tfrac12\)" and "\(O\) inside" are the <b>same statement</b>. Watch the dot at \(O\): it's <b style="color:#86efac">green inside</b> for acute, <b style="color:#fca5a5">red</b> the instant \(O\) slips outside — just like 1.4, where the triangle was acute only while the center stayed enclosed.
+  </div>
+
+  <div class="simwrap">
+    <canvas id="c-circ22" class="sim" width="360" height="360"></canvas>
+    <div class="readout" id="circ22-read"></div>
+    <div class="cap">Three draggable points cut the circle into three <b>arcs</b>. Each corner shows its angle (\(=\tfrac12\) the opposite arc). The triangle is <b style="color:#86efac">acute</b> exactly when every arc is \(&lt;50\%\) — equivalently when the center <b>\(O\)</b> stays <b style="color:#86efac">inside</b>. Push an arc to \(50\%\) and its opposite corner hits \(90^\circ\) (turns <b style="color:#fca5a5">red</b>) while \(O\) crosses the edge.</div>
+  </div>
+
+  <div class="card prob" style="margin-top:6px;border-color:rgba(125,211,252,.55)">
+    <b style="color:#7dd3fc">Yes — the \(P_1,P_2\) boundary trick from 1.4 works here too.</b>
+    In 1.4 we <b>fixed the chord \(AB\)</b> and let one point \(P\) roam; \(P\) gave an acute triangle only on the arc <b>between two boundary points</b> \(P_1\) (where \(\angle A=90^\circ\)) and \(P_2\) (where \(\angle B=90^\circ\)). Do exactly the same here: <b>fix points 1 and 2</b>, let point \(P\) be the third. Then
+    \[ \angle 1=90^\circ \Leftrightarrow 2P\text{ is a diameter} \Leftrightarrow P=\text{antipode of }2\;(=P_1),\qquad \angle 2=90^\circ \Leftrightarrow P=\text{antipode of }1\;(=P_2). \]
+    So \(P_1,P_2\) are just the <b>diametrically‑opposite points</b> of the two fixed vertices. The triangle is acute <b>only when \(P\) lies on the green arc between \(P_1\) and \(P_2\)</b> (the side away from chord 1–2). The third angle \(\angle P\) is automatically \(&lt;90^\circ\) there, because arc 1–2 is the small \(120^\circ\) arc — <b>exactly the 1.4 situation</b>, just with a different fixed chord. Drag \(P\) past \(P_1\) or \(P_2\) and that vertex's angle jumps over \(90^\circ\).
+  </div>
+  <div class="simwrap">
+    <canvas id="c-p1p2-22" class="sim" width="360" height="360"></canvas>
+    <div class="readout" id="p1p2-22-read"></div>
+    <div class="cap"><b>1, 2 are fixed</b> (the chord). <b style="color:#7dd3fc">P₁</b> = antipode of 2 (here \(\angle 1=90^\circ\)); <b style="color:#7dd3fc">P₂</b> = antipode of 1 (here \(\angle 2=90^\circ\)) — the dashed lines are the two diameters \(\,2P_1\) and \(1P_2\). Drag <b style="color:#c084fc">P</b>: acute (green) <b>only on the arc between \(P_1\) and \(P_2\)</b>, just like 1.4.</div>
+  </div>
+
+  <div class="simwrap" style="margin-top:8px;">
+    <canvas id="c-sq22" class="sim" width="340" height="340"></canvas>
+    <div class="controls"><button class="btn amber" id="mc22">▶ Run 3000 random triangles</button></div>
+    <div class="readout" id="sq22-read"></div>
+    <div class="cap">The unrolled view: arc to point 2 = \(x\), arc to point 3 = \(y\). <b>Identical green region as Example 2.1.</b> White dot = your current triangle. Empirical \(P\) → 1/4 = 0.25.</div>
+  </div>
+
+  <button class="btn ghost" onclick="rev('sol22')">Show step‑by‑step ▸</button>
+  <div class="reveal" id="sol22">
+    <div class="steps">
+      <div class="stepline"><div class="n"></div><div class="b"><b>Why each arc \(&lt;\tfrac12\) ⇔ acute.</b> Each corner is an inscribed angle \(=\tfrac12\) its opposite arc, so corner \(&lt;90^\circ\) ⇔ opposite arc \(&lt;180^\circ\) (a semicircle). All three corners acute ⇔ <b>all three arcs \(&lt;\) a semicircle</b>. <i>(Second way, same as 1.4: equivalently the center \(O\) lies inside the triangle.)</i></div></div>
+      <div class="stepline"><div class="n"></div><div class="b"><b>Fix one point → two random numbers.</b> By rotation, anchor point 1. Let \(x,y\) be the arc‑fractions to points 2 and 3 (each uniform on \([0,1]\)). Two numbers ⇒ <b>unit square, area 1</b>.</div></div>
+      <div class="stepline"><div class="n"></div><div class="b"><b>Unroll = stick.</b> The three arcs are \(\min(x,y),\; |x-y|,\; 1-\max(x,y)\) — the same three pieces as Example 2.1. "All arcs \(<\tfrac12\)" is the same green region.</div></div>
+      <div class="stepline"><div class="n"></div><div class="b"><b>Measure.</b> Two triangles, area \(\tfrac14\). \(P(\text{acute})=\) <span class="answer">1/4</span>, so \(P(\text{obtuse})=\tfrac34\) (right angle has area 0).</div></div>
+    </div>
+  </div>
+  <div class="method">
+    <div class="h">🔑 TYPE — Several random points on a circle; triangle shape</div>
+    <b>METHOD:</b> Convert the angle condition to an <b>arc</b> condition with the inscribed‑angle theorem (acute ⇔ every arc \(&lt;180^\circ\) ⇔ center \(O\) inside). <b>Fix one point</b> by symmetry so only two random numbers remain ⇒ <b>area</b> in the unit square. Recognize it as the stick problem ⇒ \(\tfrac14\).
+  </div>
+</div>
+
+<!-- Example 3.1 -->
+<h3 class="ex">Example 3.1 — Linear condition on two random numbers</h3>
+<div class="card amber"><p style="color:var(--text);margin:0;">\(x,y\) chosen at random from \([-2,2]\). Find \(P(x+y>1)\).</p></div>
+<div class="card">
+  <div class="simwrap">
+    <canvas id="c-sq31" class="sim" width="400" height="400"></canvas>
+    <div class="controls"><button class="btn amber" id="mc31">▶ Run 3000 random trials</button></div>
+    <div class="readout" id="read31">Green dots satisfy \(x+y>1\). Empirical \(P\) → converges to <b>9/32 ≈ 0.281</b>.</div>
+    <div class="cap">Sample space = the \(4\times4\) square (area 16). Success = triangle above the line \(x+y=1\).</div>
+  </div>
+  <button class="btn ghost" onclick="rev('sol31')">Show step‑by‑step ▸</button>
+  <div class="reveal" id="sol31">
+    <div class="steps">
+      <div class="stepline"><div class="n"></div><div class="b">Square area \(=4\times4=16\).</div></div>
+      <div class="stepline"><div class="n"></div><div class="b">Line \(x+y=1\) cuts off the triangle with vertices \((-1,2),(2,2),(2,-1)\): legs \(3,3\), area \(=\tfrac12(3)(3)=\tfrac92\).</div></div>
+      <div class="stepline"><div class="n"></div><div class="b">\(P=\dfrac{9/2}{16}=\) <span class="answer">9/32</span>.</div></div>
+    </div>
+  </div>
+  <div class="method">
+    <div class="h">🔑 TYPE — Two uniform numbers + a linear condition (area)</div>
+    <b>METHOD:</b> Draw the square, draw the boundary line, shade the correct side, use \(\tfrac12 bh\) for triangles. \(P=\dfrac{\text{shaded}}{\text{square}}\).
+  </div>
+</div>
+
+<!-- Example 3.2 -->
+<h3 class="ex">Example 3.2 — Obtuse triangle from random sides <span class="pill">2018 AMC 10B #22</span></h3>
+<div class="card amber"><p style="color:var(--text);margin:0;">\(x,y\) chosen independently and uniformly from \([0,1]\). Which value is closest to \(P(x,y,1\text{ form an obtuse triangle})\)?</p></div>
+<div class="card">
+  <div class="simwrap">
+    <canvas id="c-sq32" class="sim" width="400" height="400"></canvas>
+    <div class="controls"><button class="btn amber" id="mc32">▶ Run 4000 random trials</button></div>
+    <div class="readout" id="read32">Green = obtuse triangle. Empirical \(P\) → converges to about <b>0.29</b>.</div>
+    <div class="cap">Unit square. Below the line \(x+y=1\): no triangle. Inside the quarter‑circle \(x^2+y^2<1\) (and a valid triangle): the angle opposite side \(1\) is obtuse.</div>
+  </div>
+  <button class="btn ghost" onclick="rev('sol32')">Show step‑by‑step ▸</button>
+  <div class="reveal" id="sol32">
+    <div class="steps">
+      <div class="stepline"><div class="n"></div><div class="b">Need a real triangle: \(x+y>1\).</div></div>
+      <div class="stepline"><div class="n"></div><div class="b">Side \(1\) is longest; obtuse ⇔ \(x^2+y^2<1\). Region = inside quarter circle, above the line.</div></div>
+      <div class="stepline"><div class="n"></div><div class="b">Area \(=\dfrac{\pi}{4}-\dfrac12\approx0.285\Rightarrow P\approx\) <span class="answer">0.29</span> (C).</div></div>
+    </div>
+  </div>
+  <div class="method">
+    <div class="h">🔑 TYPE — Two uniform numbers → triangle existence + angle type</div>
+    <b>METHOD:</b> Encode geometry as algebra in the unit square: <b>triangle inequality</b> = linear conditions; <b>right angle</b> = \(a^2+b^2=c^2\) (a circle); <b>obtuse</b> = \(a^2+b^2<c^2\) (inside the circle). Shade the overlap, find its area.
+  </div>
+</div>
+
+<!-- Example 4.1 -->
+<h3 class="ex">Example 4.1 — Within \(d\) of a lattice point <span class="pill">2020 AMC 10A #16</span></h3>
+<div class="card amber"><p style="color:var(--text);margin:0;">A point is chosen at random in the \(2020\times2020\) square. \(P(\text{within }d\text{ of a lattice point})=\tfrac12\). Find \(d\) (nearest tenth). <b>Drag the slider.</b></p></div>
+<div class="card">
+  <div class="simwrap">
+    <canvas id="c-cell" class="sim" width="320" height="320"></canvas>
+    <div class="controls">
+      <label>\(d=\) <span class="val" id="cell-d">0.40</span></label>
+      <input type="range" id="cell-slider" min="0" max="0.5" step="0.001" value="0.399">
+    </div>
+    <div class="readout" id="cell-read"></div>
+    <div class="cap">The grid repeats every \(1\times1\) cell. Four corner quarter‑circles assemble into <b>one full circle</b> of area \(\pi d^2\). Set \(\pi d^2=\tfrac12\).</div>
+  </div>
+  <button class="btn ghost" onclick="rev('sol41')">Show step‑by‑step ▸</button>
+  <div class="reveal" id="sol41">
+    <div class="steps">
+      <div class="stepline"><div class="n"></div><div class="b">Reduce to one unit cell. Covered area \(=4\times\tfrac14\pi d^2=\pi d^2\).</div></div>
+      <div class="stepline"><div class="n"></div><div class="b">\(\pi d^2=\tfrac12\Rightarrow d^2=\dfrac1{2\pi}\approx0.159\Rightarrow d\approx0.399\).</div></div>
+      <div class="stepline"><div class="n"></div><div class="b">\(d\approx\) <span class="answer">0.4</span> (B).</div></div>
+    </div>
+  </div>
+  <div class="method">
+    <div class="h">🔑 TYPE — Random point in a grid; "within \(d\) of a lattice point"</div>
+    <b>METHOD:</b> <b>Reduce to ONE unit cell</b> by periodicity. Corner quarter‑circles assemble into a full circle \(\pi d^2\). Set \(\pi d^2=(\text{given probability})\) and solve.
+  </div>
+</div>
+
+<!-- Example 4.2 -->
+<h3 class="ex">Example 4.2 — Chord intersects the inner circle <span class="pill">2014 AMC 10B #19</span></h3>
+<div class="card amber"><p style="color:var(--text);margin:0;">Concentric circles, radii 1 and 2. Two points on the outer circle are chosen at random. Find \(P(\text{the chord intersects the inner circle})\). <b>Drag the second point.</b></p></div>
+<div class="card">
+  <div class="simwrap">
+    <canvas id="c-chord" class="sim" width="420" height="420"></canvas>
+    <div class="controls"><button class="btn amber" id="mc42">▶ Run 3000 random trials</button></div>
+    <div class="readout" id="read42"></div>
+    <div class="cap">Fix the first point (symmetry). The chord hits the inner circle ⇔ distance from center \(=2\cos\frac{\varphi}{2}<1\) ⇔ \(\varphi\in(120^\circ,240^\circ)\). Chord turns green when it crosses.</div>
+  </div>
+  <button class="btn ghost" onclick="rev('sol42')">Show step‑by‑step ▸</button>
+  <div class="reveal" id="sol42">
+    <div class="steps">
+      <div class="stepline"><div class="n"></div><div class="b">Fix point 1; gap angle \(\varphi\sim\text{Uniform}[0,360^\circ)\).</div></div>
+      <div class="stepline"><div class="n"></div><div class="b">Distance center→chord \(=2\cos\frac{\varphi}{2}<1\Rightarrow\cos\frac{\varphi}{2}<\tfrac12\Rightarrow\varphi\in(120^\circ,240^\circ)\).</div></div>
+      <div class="stepline"><div class="n"></div><div class="b">\(P=\dfrac{240-120}{360}=\) <span class="answer">1/3</span> (B).</div></div>
+    </div>
+  </div>
+  <div class="method">
+    <div class="h">🔑 TYPE — Two random points on a circle; chord vs. inner region</div>
+    <b>METHOD:</b> <b>Fix one point</b> (rotational symmetry); the gap angle \(\varphi\) is the single uniform variable. Turn the geometry into an inequality via distance center→chord \(=R\cos\frac{\varphi}{2}\). Then \(P=\dfrac{\text{good angle}}{360^\circ}\).
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     HOMEWORK
+     ════════════════════════════════════════════════════════ -->
+<hr class="div">
+<h2 class="sec" id="hw">Homework — solved with the methods above</h2>
+<p style="color:var(--muted);">Each problem names the example whose method it reuses. Try it first, then reveal.</p>
+
+<div class="hw">
+  <span class="hwnum">HW 1</span><span class="pill">reuses Ex 1.2</span>
+  <p style="color:var(--text);">\(x\) random on \([-3,4]\). Find \(P(|x|<1)\). <b>Drag the point.</b></p>
+  <div class="simwrap">
+    <canvas id="hwc1" class="sim" width="700" height="110"></canvas>
+    <input type="range" id="hws1" min="-3" max="4" step="0.01" value="0">
+    <div class="readout" id="hwr1"></div>
+  </div>
+  <button class="btn ghost" onclick="rev('h1')">Reveal ▸</button>
+  <div class="reveal" id="h1"><div class="card prob">Total length \(=4-(-3)=7\). \(|x|<1\Rightarrow-1<x<1\), length \(2\). \(\;P=\) <span class="answer">2/7</span> (C).</div></div>
+</div>
+
+<div class="hw">
+  <span class="hwnum">HW 2</span><span class="pill">area of rings</span>
+  <p style="color:var(--text);">Dartboard: center (10 pts) radius 1, each ring adds 1 to the radius (scores 10…5 at radii 1…6). Find \(P(\text{score}=9\text{ or }10)\).</p>
+  <div class="simwrap">
+    <canvas id="hwc2" class="sim" width="320" height="320"></canvas>
+    <div class="controls"><button class="btn amber" id="hwmc2">▶ Throw 2000 darts</button></div>
+    <div class="readout" id="hwr2">Green = the two inner rings (radius ≤ 2). Run darts → empirical \(P\) converges to 1/9 ≈ 0.111.</div>
+  </div>
+  <button class="btn ghost" onclick="rev('h2')">Reveal ▸</button>
+  <div class="reveal" id="h2"><div class="card prob">"9 or 10" = within radius 2: area \(=\pi(2)^2=4\pi\). Whole board radius 6: area \(36\pi\). \(P=\dfrac{4\pi}{36\pi}=\) <span class="answer">1/9</span>. (General: \(P=4/R^2\) — read \(R\) off the figure.)</div></div>
+</div>
+
+<div class="hw">
+  <span class="hwnum">HW 3</span><span class="pill">random point → area ratio</span>
+  <p style="color:var(--text);">President's‑Proof right trapezoid from two right triangles (legs \(a,b\)) + one isosceles right triangle (legs \(c\)). With \(a=2,b=1\), find \(P(\text{point in the isosceles right }\triangle CDE)\).</p>
+  <div class="simwrap">
+    <canvas id="hwc3" class="sim" width="400" height="300"></canvas>
+    <div class="controls"><button class="btn amber" id="hwmc3">▶ Run 3000 random points</button></div>
+    <div class="readout" id="hwr3">Green = the shaded isosceles right \(\triangle CDE\). Run points → empirical \(P\) converges to 5/9 ≈ 0.556.</div>
+  </div>
+  <button class="btn ghost" onclick="rev('h3')">Reveal ▸</button>
+  <div class="reveal" id="h3"><div class="card prob">\(c^2=a^2+b^2=5\). Shaded \(=\tfrac12 c^2=\tfrac52\). Trapezoid \(=\tfrac12(a+b)(a+b)=\tfrac12(3)(3)=\tfrac92\). \(P=\dfrac{5/2}{9/2}=\) <span class="answer">5/9</span> (B).</div></div>
+</div>
+
+<div class="hw">
+  <span class="hwnum">HW 4</span><span class="pill">reuses Ex 1.1 idea (min)</span>
+  <p style="color:var(--text);">Two numbers chosen at random in \([0,2]\). Find \(P(\text{the smaller one}>\tfrac23)\).</p>
+  <div class="simwrap">
+    <canvas id="hwc4" class="sim" width="340" height="340"></canvas>
+    <div class="controls"><button class="btn amber" id="hwmc4">▶ Run 3000 trials</button></div>
+    <div class="readout" id="hwr4">Green = both numbers \(>\tfrac23\) (the small green square). Empirical \(P\) → 4/9 ≈ 0.444.</div>
+  </div>
+  <button class="btn ghost" onclick="rev('h4')">Reveal ▸</button>
+  <div class="reveal" id="h4"><div class="card prob">"smaller \(>\tfrac23\)" ⇔ both \(>\tfrac23\). Each: \(\dfrac{2-2/3}{2}=\tfrac23\). Independent → \(\left(\tfrac23\right)^2=\) <span class="answer">4/9</span> (C).</div></div>
+</div>
+
+<div class="hw">
+  <span class="hwnum">HW 5</span><span class="pill">reuses Ex 1.2</span>
+  <p style="color:var(--text);">The \(x\)-intercept of \(y=x+b\) lies in \([-2,3]\). Find \(P(b>1)\). <b>Drag \(b\).</b></p>
+  <div class="simwrap">
+    <canvas id="hwc5" class="sim" width="700" height="150"></canvas>
+    <input type="range" id="hws5" min="-3" max="2" step="0.01" value="-0.5">
+    <div class="readout" id="hwr5"></div>
+  </div>
+  <button class="btn ghost" onclick="rev('h5')">Reveal ▸</button>
+  <div class="reveal" id="h5"><div class="card prob">\(x\)-intercept: \(0=x+b\Rightarrow x=-b\in[-2,3]\Rightarrow b\in[-3,2]\) (length 5). Want \(b>1\): \((1,2]\), length 1. \(P=\) <span class="answer">1/5</span> (A).</div></div>
+</div>
+
+<div class="hw">
+  <span class="hwnum">HW 6</span><span class="pill">reuses Ex 1.1</span>
+  <p style="color:var(--text);">A 5‑m rope is cut at a random position. Find \(P(\text{both pieces}\ge2)\). <b>Drag the cut.</b></p>
+  <div class="simwrap">
+    <canvas id="hwc6" class="sim" width="700" height="130"></canvas>
+    <input type="range" id="hws6" min="0" max="5" step="0.01" value="2.5">
+    <div class="readout" id="hwr6"></div>
+  </div>
+  <button class="btn ghost" onclick="rev('h6')">Reveal ▸</button>
+  <div class="reveal" id="h6"><div class="card prob">Cut \(x\in[0,5]\). Need \(x\ge2\) and \(5-x\ge2\Rightarrow 2\le x\le3\), length 1. \(P=\) <span class="answer">1/5</span>.</div></div>
+</div>
+
+<div class="hw">
+  <span class="hwnum">HW 7</span><span class="pill">random point → area ratio</span>
+  <p style="color:var(--text);">A point is chosen at random inside a <b>Reuleaux triangle</b> (built on an equilateral triangle of side \(s\)). Find \(P(\text{point in the equilateral triangle})\).</p>
+  <div class="simwrap">
+    <canvas id="hwc7" class="sim" width="360" height="360"></canvas>
+    <div class="controls"><button class="btn amber" id="hwmc7">▶ Run 3000 random points</button></div>
+    <div class="readout" id="hwr7">Purple outline = Reuleaux triangle; green = the inner equilateral triangle. Empirical \(P\) → ≈ 0.61.</div>
+  </div>
+  <button class="btn ghost" onclick="rev('h7')">Reveal ▸</button>
+  <div class="reveal" id="h7"><div class="card prob">Triangle area \(=\tfrac{\sqrt3}{4}s^2\); Reuleaux area \(=\tfrac12(\pi-\sqrt3)s^2\). \(P=\dfrac{\sqrt3/4}{(\pi-\sqrt3)/2}=\dfrac{\sqrt3}{2(\pi-\sqrt3)}\approx\) <span class="answer">0.61</span> (scale‑independent — \(s^2\) cancels).</div></div>
+</div>
+
+<div class="hw">
+  <span class="hwnum">HW 8</span><span class="pill">reuses Ex 4.1 / Ex 1.4 idea</span>
+  <p style="color:var(--text);">Square \(ABCD\) side 2. Find \(P(\text{distance to each of }A,B,C,D>1)\).</p>
+  <div class="simwrap">
+    <canvas id="hwc8" class="sim" width="340" height="340"></canvas>
+    <div class="controls"><button class="btn amber" id="hwmc8">▶ Run 3000 trials</button></div>
+    <div class="readout" id="hwr8">Blue quarter‑circles = too close to a corner. Green (far from all four) → empirical \(P\) ≈ 0.215.</div>
+  </div>
+  <button class="btn ghost" onclick="rev('h8')">Reveal ▸</button>
+  <div class="reveal" id="h8"><div class="card prob">Within 1 of a corner = a quarter‑circle radius 1; four of them = one full circle, area \(\pi\) (no overlap, corners are 2 apart). Far from all four: \(4-\pi\). \(P=\dfrac{4-\pi}{4}=1-\dfrac{\pi}{4}\approx\) <span class="answer">0.215</span> (D).</div></div>
+</div>
+
+<div class="hw">
+  <span class="hwnum">HW 9</span><span class="pill">area · sector ÷ triangle</span>
+  <p style="color:var(--text);">Isosceles right triangle, legs \(2\). A point is taken at random <b>inside the triangle</b>. Find \(P(\text{distance to the right‑angle vertex}<1)\). <span class="pill">answers are multiples of π ⇒ area model</span></p>
+  <div class="simwrap">
+    <canvas id="hwc9" class="sim" width="340" height="340"></canvas>
+    <div class="controls"><button class="btn amber" id="hwmc9">▶ Run 3000 random points</button></div>
+    <div class="readout" id="hwr9"></div>
+  </div>
+  <button class="btn ghost" onclick="rev('h9')">Reveal ▸</button>
+  <div class="reveal" id="h9"><div class="card prob"><b>Two coordinates ⇒ area.</b> A random point inside the triangle has \(2\) free numbers, so the sample space is the triangle's <b>area</b> \(=\tfrac12(2)(2)=2\). The favorable set "within distance 1 of the right‑angle vertex \(O\)" is a <b>quarter‑disk</b> — the angle at \(O\) is \(90^\circ=\tfrac14\) of a full turn — of radius 1, area \(=\tfrac14\pi(1)^2=\tfrac{\pi}{4}\). (It fits entirely inside, since the hypotenuse \(x+y=2\) is far beyond radius 1.) So \(P=\dfrac{\pi/4}{2}=\) <span class="answer">π/8 ≈ 0.393</span> &nbsp;(choice A). <i>The leg‑only reading would give \(\tfrac12\), but the π answer choices show the point is taken inside the region.</i></div></div>
+</div>
+
+<div class="hw">
+  <span class="hwnum">HW 10</span><span class="pill">time = length</span>
+  <p style="color:var(--text);">Buses leave at 7:00, 8:00, 8:30. You arrive at a random time in \([7{:}50,\,8{:}30]\). Find \(P(\text{wait}\le10\text{ min})\). <b>Drag your arrival time.</b></p>
+  <div class="simwrap">
+    <canvas id="hwc10" class="sim" width="700" height="150"></canvas>
+    <input type="range" id="hws10" min="0" max="40" step="0.5" value="15">
+    <div class="readout" id="hwr10"></div>
+  </div>
+  <button class="btn ghost" onclick="rev('h10')">Reveal ▸</button>
+  <div class="reveal" id="h10"><div class="card prob">Window \(=40\) min. Wait \(\le10\) if you arrive in \([7{:}50,8{:}00]\) (catch 8:00) or \([8{:}20,8{:}30]\) (catch 8:30): \(10+10=20\) min. \(P=\dfrac{20}{40}=\) <span class="answer">1/2</span>.</div></div>
+</div>
+
+<!-- ════════ CHEAT SHEET ════════ -->
+<hr class="div">
+<h2 class="sec" id="cheat">Master Cheat‑Sheet</h2>
+<div class="card glow">
+  <table class="cheat">
+    <tr><th>If the problem says…</th><th>Model it as…</th><th>Use</th></tr>
+    <tr><td>one random number / one cut / one arrival time</td><td>an <b>interval</b></td><td>length ratio</td></tr>
+    <tr><td>two random numbers / two cuts</td><td>a <b>square / region</b></td><td>area ratio</td></tr>
+    <tr><td>a random <b>point in a shape</b></td><td>the <b>shape</b></td><td>area ratio</td></tr>
+    <tr><td>random <b>point on a circle</b>, triangle acute/obtuse</td><td><b>arcs</b>; criterion "all arcs \(<180^\circ\)"</td><td>arc ratio</td></tr>
+    <tr><td><b>two points on a circle</b>, chord question</td><td>fix one point, gap \(\varphi\) uniform; dist \(=R\cos\frac{\varphi}{2}\)</td><td>angle ratio</td></tr>
+    <tr><td>"within \(d\) of a lattice point"</td><td><b>one unit cell</b>; corners → \(\pi d^2\)</td><td>area ratio</td></tr>
+    <tr><td>triangle from random sides</td><td>unit square; tri‑ineq (lines) + \(a^2{+}b^2\) vs \(c^2\) (circle)</td><td>area ratio</td></tr>
+    <tr><td>"distance to a point \(>r\)"</td><td>remove a <b>disk / quarter‑disk</b> of radius \(r\)</td><td>area (complement)</td></tr>
+    <tr><td>"min \(>t\)" / "max \(<t\)"</td><td>all values on one side of \(t\)</td><td>multiply length fractions</td></tr>
+  </table>
+  <div class="card amber" style="margin-top:14px;">
+    <b style="color:#fff">Universal 4‑step recipe</b>
+    <ol style="margin:8px 0 0 18px;color:var(--text);">
+      <li>Identify the random quantity(ies) → pick length / area / volume.</li>
+      <li>Draw the <b>sample space</b> and find its measure.</li>
+      <li>Translate every condition into <b>inequalities / regions</b>; shade success.</li>
+      <li>\(P=\dfrac{\text{success measure}}{\text{sample measure}}\). Use the <b>complement</b> when "success" is messy.</li>
+    </ol>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:30px;"><a class="up" href="#idea">↑ Back to top</a></div>
+
+</div><!-- /wrap -->
+
+<script>
+// ───────── stars ─────────
+(function(){
+  var sc=document.getElementById('stars'), x=sc.getContext('2d'), st=[];
+  function init(){sc.width=innerWidth;sc.height=innerHeight;st=Array.from({length:160},function(){return{x:Math.random()*sc.width,y:Math.random()*sc.height,r:Math.random()*1.3+0.3,a:Math.random(),da:(Math.random()-0.5)*0.006};});}
+  function draw(){x.clearRect(0,0,sc.width,sc.height);st.forEach(function(s){s.a=Math.max(0.1,Math.min(1,s.a+s.da));if(s.a<=0.1||s.a>=1)s.da*=-1;x.beginPath();x.arc(s.x,s.y,s.r,0,6.283);x.fillStyle='rgba(255,255,255,'+s.a+')';x.fill();});requestAnimationFrame(draw);}
+  init();draw();addEventListener('resize',init);
+})();
+
+// ───────── helpers ─────────
+function mj(){if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise();}
+function rev(id){var e=document.getElementById(id);e.classList.toggle('show');mj();}
+function hidpi(cv){var d=window.devicePixelRatio||1,c=cv.getContext('2d');var w=cv.width,h=cv.height;cv.style.width=w+'px';cv.style.height=h+'px';cv.width=w*d;cv.height=h*d;c.scale(d,d);cv._w=w;cv._h=h;return c;}
+var C2='#94a3b8';
+
+// ───────── concept question ─────────
+document.querySelectorAll('#cq .choice').forEach(function(ch){
+  ch.onclick=function(){
+    if(document.querySelector('#cq .choice.correct'))return;
+    document.querySelectorAll('#cq .choice').forEach(function(c){if(c.dataset.ok==='1')c.classList.add('correct');});
+    if(ch.dataset.ok!=='1')ch.classList.add('wrong');
+    var fb=document.getElementById('cq-fb');fb.classList.add('show');
+    fb.innerHTML='<div class="card '+(ch.dataset.ok==='1'?'green':'amber')+'" style="margin:8px 0 0;">'+
+      (ch.dataset.ok==='1'?'✅ Correct! ':'❌ Not quite. ')+
+      'Only <b>B</b> has \\(a,b\\) ranging over a <b>continuous</b> region — infinitely many outcomes → geometric (area). A, C, D are finite → classical (counting).</div>';
+    mj();
+  };
+});
+
+// ───────── Example 1.1 : segment cut ─────────
+(function(){
+  var cv=document.getElementById('c-seg'),ctx=hidpi(cv),W=cv._w,H=cv._h;
+  var sl=document.getElementById('seg-slider');
+  var x0=60,x1=W-60,y=H/2,len=x1-x0;
+  function px(t){return x0+t*len;}
+  function draw(t){
+    ctx.clearRect(0,0,W,H);
+    // success window [1/3,2/3]
+    ctx.fillStyle='rgba(34,197,94,0.18)';
+    ctx.fillRect(px(1/3),y-30,px(2/3)-px(1/3),60);
+    // base track
+    ctx.lineWidth=10;ctx.lineCap='round';
+    ctx.strokeStyle='#1e3a5f';ctx.beginPath();ctx.moveTo(x0,y);ctx.lineTo(x1,y);ctx.stroke();
+    // two pieces
+    var c=px(t);
+    ctx.strokeStyle='#3b82f6';ctx.beginPath();ctx.moveTo(x0,y);ctx.lineTo(c,y);ctx.stroke();
+    ctx.strokeStyle='#f59e0b';ctx.beginPath();ctx.moveTo(c,y);ctx.lineTo(x1,y);ctx.stroke();
+    // ticks at thirds
+    ctx.strokeStyle=C2;ctx.lineWidth=1;ctx.setLineDash([4,4]);
+    [1/3,2/3].forEach(function(f){ctx.beginPath();ctx.moveTo(px(f),y-38);ctx.lineTo(px(f),y+38);ctx.stroke();});
+    ctx.setLineDash([]);
+    // cut marker
+    ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(c,y,8,0,6.283);ctx.fill();
+    ctx.strokeStyle='#050a18';ctx.lineWidth=2;ctx.stroke();
+    // labels
+    ctx.fillStyle=C2;ctx.font='12px system-ui';ctx.textAlign='center';
+    ctx.fillText('0',x0,y+52);ctx.fillText('1',x1,y+52);
+    ctx.fillText('⅓',px(1/3),y-46);ctx.fillText('⅔',px(2/3),y-46);
+    var a=t,b=1-t,ok=(a>=1/3&&b>=1/3);
+    document.getElementById('seg-x').textContent=t.toFixed(2);
+    document.getElementById('seg-read').innerHTML=
+      'left = <b>'+a.toFixed(2)+'</b>, right = <b>'+b.toFixed(2)+'</b> → '+
+      (ok?'<span style="color:#86efac;font-weight:700;">both ≥ ⅓ ✓ WIN</span>':'<span style="color:#fca5a5;font-weight:700;">a piece is too short ✗</span>');
+  }
+  sl.oninput=function(){draw(+sl.value);};draw(0.5);
+})();
+
+// ───────── Example 1.2 : number line + parabola ─────────
+(function(){
+  var cv=document.getElementById('c-line'),ctx=hidpi(cv),W=cv._w,H=cv._h;
+  var x0=40,x1=W-40,axisY=H-40,len=x1-x0;
+  function px(v){return x0+(v+5)/10*len;}      // map [-5,5]
+  function f(v){return v*v-v-2;}
+  // scale parabola into top region
+  var topY=20,baseY=axisY;
+  var maxF=f(-5); // 28
+  function py(val){return baseY-(val/maxF)*(baseY-topY);}
+  ctx.clearRect(0,0,W,H);
+  // shaded success on axis
+  ctx.fillStyle='rgba(34,197,94,0.2)';
+  ctx.fillRect(px(-5),axisY-12,px(-1)-px(-5),24);
+  ctx.fillRect(px(2),axisY-12,px(5)-px(2),24);
+  // axis
+  ctx.strokeStyle=C2;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x0,axisY);ctx.lineTo(x1,axisY);ctx.stroke();
+  ctx.fillStyle=C2;ctx.font='12px system-ui';ctx.textAlign='center';
+  for(var v=-5;v<=5;v++){ctx.beginPath();ctx.moveTo(px(v),axisY-4);ctx.lineTo(px(v),axisY+4);ctx.stroke();ctx.fillText(v,px(v),axisY+20);}
+  // roots
+  [-1,2].forEach(function(r){ctx.strokeStyle='#f59e0b';ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(px(r),topY);ctx.lineTo(px(r),axisY+12);ctx.stroke();ctx.setLineDash([]);});
+  // parabola
+  ctx.strokeStyle='#3b82f6';ctx.lineWidth=2.5;ctx.beginPath();
+  for(var i=0;i<=200;i++){var vv=-5+10*i/200;var X=px(vv),Y=py(f(vv));if(i===0)ctx.moveTo(X,Y);else ctx.lineTo(X,Y);}
+  ctx.stroke();
+  ctx.fillStyle='#86efac';ctx.font='13px system-ui';
+  ctx.fillText('x < -1',px(-3),axisY+34);ctx.fillText('x > 2',px(3.5),axisY+34);
+  ctx.fillStyle=C2;ctx.fillText('y = x² - x - 2',px(0.5),py(f(0.5))+18);
+})();
+
+// ───────── Example 1.3 : rectangle thinking path + MC ─────────
+(function(){
+  var cv=document.getElementById('c-rect'),ctx=hidpi(cv),W=cv._w,H=cv._h;
+  var step=0,MAX=4;
+  // rectangle: width=Chloé(160), height=Laurent(320), ratio 1:2
+  var ox=70,oy=H-40,rw=200,rh=400; // pixels; 200 wide (C), 400 tall (L) => 1:2
+  var mcPts=[],mcWin=0,mcTot=0,mcRun=false;
+  function CX(c){return ox+c*rw;}            // c in [0,1] fraction of Chloé range
+  function CY(l){return oy-l*rh;}            // l in [0,1] fraction of Laurent FULL range (so l=0.5 => L=2017)
+  // Note: Laurent range is 2x Chloé. We treat l as fraction of 4034. Line L=C means L(actual)=C(actual)
+  // C frac c -> C=2017c ; L=C means L=2017c -> Lfrac = 2017c/4034 = c/2.
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // axes
+    ctx.strokeStyle=C2;ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox+rw+10,oy);ctx.stroke(); // x
+    ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox,oy-rh-10);ctx.stroke(); // y
+    ctx.fillStyle=C2;ctx.font='12px system-ui';ctx.textAlign='center';
+    ctx.fillText('Chloé C',ox+rw/2,oy+24);ctx.fillText('0',ox,oy+18);ctx.fillText('2017',ox+rw,oy+18);
+    ctx.save();ctx.translate(ox-26,oy-rh/2);ctx.rotate(-Math.PI/2);ctx.fillText('Laurent L',0,0);ctx.restore();
+    ctx.fillText('4034',ox-22,oy-rh);ctx.fillText('2017',ox-22,oy-rh/2);
+    // shading per step
+    if(step>=2){ // top band always win
+      ctx.fillStyle='rgba(34,197,94,0.28)';
+      ctx.fillRect(ox,CY(1),rw,CY(0.5)-CY(1));
+    }
+    if(step>=3){ // upper triangle of bottom square (L>C within bottom square)
+      ctx.fillStyle='rgba(34,197,94,0.28)';
+      ctx.beginPath();ctx.moveTo(CX(0),CY(0));ctx.lineTo(CX(1),CY(0.5));ctx.lineTo(CX(0),CY(0.5));ctx.closePath();ctx.fill();
+    }
+    // rectangle outline
+    ctx.strokeStyle='#3b82f6';ctx.lineWidth=2;ctx.strokeRect(ox,oy-rh,rw,rh);
+    // mid line dashed at L=2017
+    if(step>=1){ctx.strokeStyle='rgba(148,163,184,0.5)';ctx.setLineDash([5,5]);ctx.beginPath();ctx.moveTo(ox,CY(0.5));ctx.lineTo(ox+rw,CY(0.5));ctx.stroke();ctx.setLineDash([]);}
+    // line L=C  (from (0,0) to (2017,2017) => fracs c=1,l=0.5)
+    if(step>=1){ctx.strokeStyle='#f59e0b';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(CX(0),CY(0));ctx.lineTo(CX(1),CY(0.5));ctx.stroke();
+      ctx.fillStyle='#f59e0b';ctx.font='13px system-ui';ctx.textAlign='left';ctx.fillText('L = C',CX(1)-4,CY(0.5)-8);}
+    // MC points
+    mcPts.forEach(function(p){ctx.fillStyle=p.win?'rgba(34,197,94,0.9)':'rgba(239,68,68,0.85)';ctx.beginPath();ctx.arc(ox+p.c*rw,oy-p.l*rh,2,0,6.283);ctx.fill();});
+    // think highlight
+    document.querySelectorAll('#rect-think .thinkstep').forEach(function(t){
+      var s=+t.dataset.s;t.classList.toggle('active',s===step);t.classList.toggle('done',s<step);
+    });
+    document.getElementById('rect-prev').disabled=(step===0);
+    document.getElementById('rect-next').disabled=(step===MAX);
+  }
+  document.getElementById('rect-next').onclick=function(){if(step<MAX){step++;draw();}};
+  document.getElementById('rect-prev').onclick=function(){if(step>0){step--;draw();}};
+  document.getElementById('rect-mc').onclick=function(){
+    if(mcRun)return;mcRun=true;mcPts=[];mcWin=0;mcTot=0;step=Math.max(step,1);
+    var target=3000,batch=60;
+    (function add(){
+      for(var i=0;i<batch&&mcTot<target;i++){
+        var C=Math.random(),Lfull=Math.random();    // C frac of 2017, Lfull frac of 4034
+        var Cval=C*2017, Lval=Lfull*4034;
+        var win=Lval>Cval;
+        mcPts.push({c:C,l:Lfull,win:win});mcTot++;if(win)mcWin++;
+      }
+      document.getElementById('rect-read').innerHTML='Trials: <b>'+mcTot+'</b> — empirical \\(P(L>C)=\\) <b>'+(mcWin/mcTot).toFixed(3)+'</b> &nbsp;(target 0.750)';
+      draw();
+      mj();
+      if(mcTot<target)requestAnimationFrame(add);else mcRun=false;
+    })();
+  };
+  draw();
+})();
+
+// ───────── Example 1.4 : acute triangle on circle ─────────
+(function(){
+  var cv=document.getElementById('c-circ'),ctx=hidpi(cv),W=cv._w,H=cv._h;
+  var cx=W/2,cy=H/2+14,R=140;
+  // A at 120°, B at 60° (math angles, CCW). Minor arc AB on top = 60° = θ.
+  var aA=2*Math.PI/3, aB=Math.PI/3;
+  function pt(a,r){r=r||R;return[cx+r*Math.cos(a),cy-r*Math.sin(a)];} // screen y-down
+  var Pang=-Math.PI/2; // start at bottom (on major arc)
+  var dragging=false, anim=null;
+  function norm(a){return (a%(2*Math.PI)+2*Math.PI)%(2*Math.PI);}
+  function angOK(a){
+    var angs=[aA,aB,a].map(norm).sort(function(p,q){return p-q;});
+    var d1=angs[1]-angs[0],d2=angs[2]-angs[1],d3=2*Math.PI-(angs[2]-angs[0]);
+    return d1<Math.PI&&d2<Math.PI&&d3<Math.PI;
+  }
+  function interior(V,U1,U2){ // interior angle at V (degrees)
+    var a1=Math.atan2(U1[1]-V[1],U1[0]-V[0]),a2=Math.atan2(U2[1]-V[1],U2[0]-V[0]);
+    var d=Math.abs(a1-a2);if(d>Math.PI)d=2*Math.PI-d;return d*180/Math.PI;
+  }
+  function angleArc(V,U1,U2,deg,bad){
+    var a1=Math.atan2(U1[1]-V[1],U1[0]-V[0]),a2=Math.atan2(U2[1]-V[1],U2[0]-V[0]);
+    var diff=a2-a1;while(diff<-Math.PI)diff+=2*Math.PI;while(diff>Math.PI)diff-=2*Math.PI;
+    ctx.beginPath();ctx.moveTo(V[0],V[1]);ctx.arc(V[0],V[1],26,a1,a2,diff<0);ctx.closePath();
+    ctx.fillStyle=bad?'rgba(239,68,68,0.30)':'rgba(34,197,94,0.28)';ctx.fill();
+    ctx.strokeStyle=bad?'#ef4444':'#22c55e';ctx.lineWidth=2;ctx.stroke();
+    var mid=a1+diff/2,lx=V[0]+44*Math.cos(mid),ly=V[1]+44*Math.sin(mid);
+    ctx.fillStyle=bad?'#fca5a5':'#86efac';ctx.font='bold 14px system-ui';ctx.textAlign='center';
+    ctx.fillText(Math.round(deg)+'°',lx,ly+4);
+  }
+  function rtMark(V,U1,U2,col){ // small right-angle square at V
+    var d1=[U1[0]-V[0],U1[1]-V[1]],d2=[U2[0]-V[0],U2[1]-V[1]];
+    var m1=Math.hypot(d1[0],d1[1]),m2=Math.hypot(d2[0],d2[1]);d1=[d1[0]/m1,d1[1]/m1];d2=[d2[0]/m2,d2[1]/m2];
+    var s=12,p1=[V[0]+s*d1[0],V[1]+s*d1[1]],p3=[V[0]+s*d2[0],V[1]+s*d2[1]],p2=[V[0]+s*(d1[0]+d2[0]),V[1]+s*(d1[1]+d2[1])];
+    ctx.strokeStyle=col;ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(p1[0],p1[1]);ctx.lineTo(p2[0],p2[1]);ctx.lineTo(p3[0],p3[1]);ctx.stroke();
+  }
+  var aP1=4*Math.PI/3, aP2=5*Math.PI/3; // P1=240° (∠P1AB=90), P2=300° (∠P2BA=90)
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // circle outline
+    ctx.strokeStyle='#3b82f6';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,cy,R,0,6.283);ctx.stroke();
+    // valid-zone halo OUTSIDE the circle (bright green = P allowed here)
+    ctx.lineWidth=7;ctx.lineCap='butt';ctx.strokeStyle='rgba(34,197,94,0.9)';
+    for(var i=0;i<720;i++){var a=i*Math.PI/360;if(angOK(a)){ctx.beginPath();ctx.arc(cx,cy,R+11,-a-0.006,-(a+Math.PI/360)+0.006,false);ctx.stroke();}}
+    // boundary ticks where an angle = 90°
+    var prev=angOK(0);
+    for(var j=1;j<=720;j++){var a2=j*Math.PI/360,cur=angOK(a2);if(cur!==prev){var tk=pt(a2,R+4),tk2=pt(a2,R+20);ctx.strokeStyle='#f59e0b';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(tk[0],tk[1]);ctx.lineTo(tk2[0],tk2[1]);ctx.stroke();}prev=cur;}
+    // "P allowed" hint near bottom
+    var hint=pt(-Math.PI/2,R+46);ctx.fillStyle='#86efac';ctx.font='bold 11px system-ui';ctx.textAlign='center';ctx.fillText('P valid only between P\u2081 and P\u2082  (60° arc)',hint[0],hint[1]);
+    var A=pt(aA),B=pt(aB),Pp=pt(Pang);
+    // radii OA, OB (dashed)
+    ctx.strokeStyle='rgba(245,158,11,0.6)';ctx.lineWidth=1.5;ctx.setLineDash([5,4]);
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(A[0],A[1]);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(B[0],B[1]);ctx.stroke();ctx.setLineDash([]);
+    // central angle θ wedge (gold)
+    ctx.beginPath();ctx.moveTo(cx,cy);
+    for(var t=aB;t<=aA+0.001;t+=0.04){var w=pt(t,34);ctx.lineTo(w[0],w[1]);}
+    ctx.closePath();ctx.fillStyle='rgba(245,158,11,0.35)';ctx.fill();ctx.strokeStyle='#f59e0b';ctx.lineWidth=1.5;ctx.stroke();
+    var thLab=pt(Math.PI/2,58);ctx.fillStyle='#fbbf24';ctx.font='bold 13px system-ui';ctx.textAlign='center';ctx.fillText('θ = 60°',thLab[0],thLab[1]);
+    // center O
+    ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(cx,cy,3.5,0,6.283);ctx.fill();
+    ctx.fillStyle='#94a3b8';ctx.font='12px system-ui';ctx.fillText('O',cx+12,cy+4);
+    // ── boundary construction: P1 (∠P1AB=90) and P2 (∠P2BA=90) ──
+    var P1=pt(aP1),P2=pt(aP2);
+    // line A→P1 (⊥ AB at A) and B→P2 (⊥ AB at B)
+    ctx.strokeStyle='rgba(56,189,248,0.85)';ctx.lineWidth=1.8;ctx.setLineDash([6,4]);
+    ctx.beginPath();ctx.moveTo(A[0],A[1]);ctx.lineTo(P1[0],P1[1]);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(B[0],B[1]);ctx.lineTo(P2[0],P2[1]);ctx.stroke();ctx.setLineDash([]);
+    rtMark(A,B,P1,'#38bdf8'); rtMark(B,A,P2,'#38bdf8');
+    // P1,P2 dots + labels
+    function bdot(p,lab){ctx.fillStyle='#38bdf8';ctx.beginPath();ctx.arc(p[0],p[1],6,0,6.283);ctx.fill();ctx.strokeStyle='#0b1220';ctx.lineWidth=2;ctx.stroke();
+      var off=[p[0]-cx,p[1]-cy],m=Math.hypot(off[0],off[1]);ctx.fillStyle='#7dd3fc';ctx.font='bold 13px system-ui';ctx.textAlign='center';ctx.fillText(lab,p[0]+off[0]/m*18,p[1]+off[1]/m*18+4);}
+    bdot(P1,'P\u2081'); bdot(P2,'P\u2082');
+    // triangle
+    var ok=angOK(Pang);
+    ctx.fillStyle=ok?'rgba(34,197,94,0.10)':'rgba(239,68,68,0.10)';
+    ctx.strokeStyle=ok?'#22c55e':'#ef4444';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(A[0],A[1]);ctx.lineTo(B[0],B[1]);ctx.lineTo(Pp[0],Pp[1]);ctx.closePath();ctx.fill();ctx.stroke();
+    // chord AB label
+    var midAB=[(A[0]+B[0])/2,(A[1]+B[1])/2];ctx.fillStyle='#cbd5e1';ctx.font='12px system-ui';ctx.fillText('AB = 2',midAB[0],midAB[1]-8);
+    // interior angles
+    var angA=interior(A,B,Pp),angB=interior(B,A,Pp),angP=interior(Pp,A,B);
+    angleArc(A,B,Pp,angA,angA>=89.5);
+    angleArc(B,A,Pp,angB,angB>=89.5);
+    angleArc(Pp,A,B,angP,angP>=89.5);
+    // vertex dots + labels
+    function dot(p,lab,col){ctx.fillStyle=col;ctx.beginPath();ctx.arc(p[0],p[1],6,0,6.283);ctx.fill();ctx.fillStyle='#fff';ctx.font='bold 14px system-ui';ctx.textAlign='center';
+      var off=[(p[0]-cx),(p[1]-cy)];var m=Math.hypot(off[0],off[1]);ctx.fillText(lab,p[0]+off[0]/m*16,p[1]+off[1]/m*16+4);}
+    dot(A,'A','#f59e0b');dot(B,'B','#f59e0b');dot(Pp,'P','#a855f7');
+    var culprit=angA>=89.5?'A':angB>=89.5?'B':angP>=89.5?'P':null;
+    document.getElementById('circ-read').innerHTML=
+      'angles → A: <b>'+Math.round(angA)+'°</b>, B: <b>'+Math.round(angB)+'°</b>, P: <b>'+Math.round(angP)+'°</b> &nbsp; '+
+      (ok?'<span style="color:#86efac;font-weight:700;">all &lt; 90° → ACUTE ✓</span>'
+         :'<span style="color:#fca5a5;font-weight:700;">angle at '+culprit+' ≥ 90° → not acute ✗</span>');
+  }
+  function setFromXY(mx,my){Pang=Math.atan2(cy-my,mx-cx);draw();}
+  function stopAnim(){if(anim){cancelAnimationFrame(anim);anim=null;}}
+  cv.addEventListener('mousedown',function(e){stopAnim();dragging=true;var r=cv.getBoundingClientRect();setFromXY(e.clientX-r.left,e.clientY-r.top);});
+  addEventListener('mousemove',function(e){if(!dragging)return;var r=cv.getBoundingClientRect();setFromXY(e.clientX-r.left,e.clientY-r.top);});
+  addEventListener('mouseup',function(){dragging=false;});
+  cv.addEventListener('touchstart',function(){stopAnim();},{passive:true});
+  cv.addEventListener('touchmove',function(e){var r=cv.getBoundingClientRect();var t=e.touches[0];setFromXY(t.clientX-r.left,t.clientY-r.top);e.preventDefault();},{passive:false});
+  document.getElementById('circ-anim').onclick=function(){if(anim)return;(function step(){Pang-=0.010;draw();anim=requestAnimationFrame(step);})();};
+  document.getElementById('circ-stop').onclick=stopAnim;
+  draw();
+})();
+
+// ───────── Example 2.1 : stick into 3 pieces ─────────
+(function(){
+  var stk=document.getElementById('c-stick21'),sctx=hidpi(stk),SW=stk._w,SH=stk._h;
+  var sq=document.getElementById('c-sq21'),qctx=hidpi(sq),QW=sq._w,QH=sq._h;
+  var a=0.3,b=0.65,drag=-1;
+  var x0=45,x1=SW-45,sy=SH/2,len=x1-x0;
+  function spx(t){return x0+t*len;}
+  var pad=36,sz=QW-2*pad;
+  function PX(v){return pad+v*sz;}function PY(v){return QH-pad-v*sz;}
+  function pieces(u,w){var lo=Math.min(u,w),hi=Math.max(u,w);return [lo,hi-lo,1-hi];}
+  function ok(u,w){return pieces(u,w).every(function(p){return p<0.5;});}
+  var mcPts=[],mcG=0,mcT=0,run=false;
+  function drawStick(){
+    sctx.clearRect(0,0,SW,SH);
+    var p=pieces(a,b),lo=Math.min(a,b),hi=Math.max(a,b),bd=[[0,lo],[lo,hi],[hi,1]],cols=['#3b82f6','#f59e0b','#a855f7'];
+    sctx.lineWidth=16;sctx.lineCap='butt';
+    bd.forEach(function(s,i){var bad=p[i]>=0.5;sctx.strokeStyle=bad?'#ef4444':cols[i];
+      sctx.beginPath();sctx.moveTo(spx(s[0])+(i?1:0),sy);sctx.lineTo(spx(s[1]),sy);sctx.stroke();
+      sctx.fillStyle=bad?'#fca5a5':'#cbd5e1';sctx.font='bold 12px system-ui';sctx.textAlign='center';
+      sctx.fillText(p[i].toFixed(2),spx((s[0]+s[1])/2),sy-18);});
+    sctx.fillStyle='#94a3b8';sctx.font='12px system-ui';sctx.fillText('0',spx(0),sy+30);sctx.fillText('1',spx(1),sy+30);
+    [a,b].forEach(function(c){sctx.fillStyle='#fff';sctx.beginPath();sctx.arc(spx(c),sy,8,0,6.283);sctx.fill();sctx.strokeStyle='#050a18';sctx.lineWidth=2;sctx.stroke();});
+    var good=ok(a,b);
+    document.getElementById('stick21-read').innerHTML='pieces: <b>'+pieces(a,b).map(function(x){return x.toFixed(2);}).join(', ')+'</b> → '+
+      (good?'<span style="color:#86efac;font-weight:700;">all &lt; ½ ✓</span>':'<span style="color:#fca5a5;font-weight:700;">a piece ≥ ½ ✗</span>');
+  }
+  function drawSquare(){
+    qctx.clearRect(0,0,QW,QH);
+    qctx.fillStyle='rgba(34,197,94,0.20)';
+    qctx.beginPath();qctx.moveTo(PX(0),PY(0.5));qctx.lineTo(PX(0.5),PY(0.5));qctx.lineTo(PX(0.5),PY(1));qctx.closePath();qctx.fill();
+    qctx.beginPath();qctx.moveTo(PX(0.5),PY(0));qctx.lineTo(PX(0.5),PY(0.5));qctx.lineTo(PX(1),PY(0.5));qctx.closePath();qctx.fill();
+    mcPts.forEach(function(pt){qctx.fillStyle=pt.g?'rgba(34,197,94,0.85)':'rgba(239,68,68,0.4)';qctx.beginPath();qctx.arc(PX(pt.x),PY(pt.y),2,0,6.283);qctx.fill();});
+    qctx.strokeStyle='#3b82f6';qctx.lineWidth=2;qctx.strokeRect(PX(0),PY(1),sz,sz);
+    qctx.strokeStyle='rgba(148,163,184,0.4)';qctx.lineWidth=1;qctx.setLineDash([4,4]);
+    qctx.beginPath();qctx.moveTo(PX(0.5),PY(0));qctx.lineTo(PX(0.5),PY(1));qctx.stroke();
+    qctx.beginPath();qctx.moveTo(PX(0),PY(0.5));qctx.lineTo(PX(1),PY(0.5));qctx.stroke();qctx.setLineDash([]);
+    qctx.fillStyle='#94a3b8';qctx.font='11px system-ui';qctx.textAlign='center';
+    qctx.fillText('x (cut 1)',PX(0.5),QH-8);qctx.fillText('0',PX(0),QH-pad+14);qctx.fillText('1',PX(1),QH-pad+14);
+    qctx.save();qctx.translate(12,PY(0.5));qctx.rotate(-Math.PI/2);qctx.fillText('y (cut 2)',0,0);qctx.restore();
+    qctx.fillStyle=ok(a,b)?'#22c55e':'#ef4444';qctx.beginPath();qctx.arc(PX(a),PY(b),6,0,6.283);qctx.fill();qctx.strokeStyle='#fff';qctx.lineWidth=2;qctx.stroke();
+  }
+  function redraw(){drawStick();drawSquare();}
+  function pick(mx){var da=Math.abs(mx-spx(a)),db=Math.abs(mx-spx(b));drag=(da<db?0:1);set(mx);}
+  function set(mx){var t=Math.max(0,Math.min(1,(mx-x0)/len));if(drag===0)a=t;else b=t;redraw();}
+  stk.addEventListener('mousedown',function(e){var r=stk.getBoundingClientRect();pick(e.clientX-r.left);});
+  addEventListener('mousemove',function(e){if(drag<0)return;var r=stk.getBoundingClientRect();set(e.clientX-r.left);});
+  addEventListener('mouseup',function(){drag=-1;});
+  stk.addEventListener('touchstart',function(e){var r=stk.getBoundingClientRect();pick(e.touches[0].clientX-r.left);e.preventDefault();},{passive:false});
+  stk.addEventListener('touchmove',function(e){if(drag<0)return;var r=stk.getBoundingClientRect();set(e.touches[0].clientX-r.left);e.preventDefault();},{passive:false});
+  document.getElementById('mc21').onclick=function(){
+    if(run)return;run=true;mcPts=[];mcG=0;mcT=0;var T=3000;
+    (function add(){for(var i=0;i<60&&mcT<T;i++){var x=Math.random(),y=Math.random(),g=ok(x,y);mcPts.push({x:x,y:y,g:g});mcT++;if(g)mcG++;}
+      document.getElementById('sq21-read').innerHTML='Trials: <b>'+mcT+'</b> — empirical \\(P=\\) <b>'+(mcG/mcT).toFixed(3)+'</b> (target 1/4 = 0.25)';
+      drawSquare();mj();if(mcT<T)requestAnimationFrame(add);else run=false;})();
+  };
+  redraw();
+})();
+
+// ───────── Example 2.2 : 3 points on circle, acute ─────────
+(function(){
+  var cc=document.getElementById('c-circ22'),cctx=hidpi(cc),CW=cc._w,CH=cc._h;
+  var sq=document.getElementById('c-sq22'),qctx=hidpi(sq),QW=sq._w,QH=sq._h;
+  var cx=CW/2,cy=CH/2,R=125;
+  var pang=[-Math.PI/2, -Math.PI/2+2.0, -Math.PI/2+4.2],drag=-1;
+  function pt(a,r){r=r||R;return[cx+r*Math.cos(a),cy-r*Math.sin(a)];}
+  function norm(a){return (a%(2*Math.PI)+2*Math.PI)%(2*Math.PI);}
+  var pad=36,sz=QW-2*pad;
+  function PX(v){return pad+v*sz;}function PY(v){return QH-pad-v*sz;}
+  function pieces(u,w){var lo=Math.min(u,w),hi=Math.max(u,w);return [lo,hi-lo,1-hi];}
+  function ok(u,w){return pieces(u,w).every(function(p){return p<0.5;});}
+  function uv(){var u=norm(pang[1]-pang[0])/(2*Math.PI),w=norm(pang[2]-pang[0])/(2*Math.PI);return [u,w];}
+  function arcs(){ // three arc fractions, sorted positions
+    var s=[norm(pang[0]),norm(pang[1]),norm(pang[2])].sort(function(p,q){return p-q;});
+    return [(s[1]-s[0])/(2*Math.PI),(s[2]-s[1])/(2*Math.PI),(2*Math.PI-(s[2]-s[0]))/(2*Math.PI)];
+  }
+  var mcPts=[],mcG=0,mcT=0,run=false;
+  function ang3(P,Q,R2){ // interior angle at P (degrees) in triangle P,Q,R2
+    var a1=Math.atan2(Q[1]-P[1],Q[0]-P[0]),a2=Math.atan2(R2[1]-P[1],R2[0]-P[0]);
+    var d=Math.abs(a1-a2);if(d>Math.PI)d=2*Math.PI-d;return d*180/Math.PI;
+  }
+  function drawCircle(){
+    cctx.clearRect(0,0,CW,CH);
+    // arcs colored by length
+    var s=[{a:norm(pang[0]),i:0},{a:norm(pang[1]),i:1},{a:norm(pang[2]),i:2}].sort(function(p,q){return p.a-q.a;});
+    var segs=[[s[0].a,s[1].a],[s[1].a,s[2].a],[s[2].a,s[0].a+2*Math.PI]];
+    cctx.lineWidth=9;cctx.lineCap='butt';
+    segs.forEach(function(g){var frac=(g[1]-g[0])/(2*Math.PI),bad=frac>=0.5;
+      cctx.strokeStyle=bad?'rgba(239,68,68,0.9)':'rgba(34,197,94,0.8)';
+      cctx.beginPath();cctx.arc(cx,cy,R,-g[0],-g[1],true);cctx.stroke();});
+    cctx.strokeStyle='#3b82f6';cctx.lineWidth=1.5;cctx.beginPath();cctx.arc(cx,cy,R-6,0,6.283);cctx.stroke();
+    var V=pang.map(function(a){return pt(a);});
+    var ar=arcs(),good=ar.every(function(f){return f<0.5;});
+    // dashed radii from O to each vertex (shows the central angles whose halves are the corner angles)
+    cctx.strokeStyle='rgba(148,163,184,0.45)';cctx.lineWidth=1;cctx.setLineDash([4,4]);
+    V.forEach(function(p){cctx.beginPath();cctx.moveTo(cx,cy);cctx.lineTo(p[0],p[1]);cctx.stroke();});
+    cctx.setLineDash([]);
+    // triangle
+    cctx.fillStyle=good?'rgba(34,197,94,0.12)':'rgba(239,68,68,0.12)';
+    cctx.strokeStyle=good?'#22c55e':'#ef4444';cctx.lineWidth=2.5;
+    cctx.beginPath();V.forEach(function(p,i){if(i===0)cctx.moveTo(p[0],p[1]);else cctx.lineTo(p[0],p[1]);});cctx.closePath();cctx.fill();cctx.stroke();
+    // interior angle at each vertex = half its opposite arc
+    var angs=[ang3(V[0],V[1],V[2]),ang3(V[1],V[0],V[2]),ang3(V[2],V[0],V[1])];
+    ['1','2','3'].forEach(function(lab,i){var p=V[i],off=[p[0]-cx,p[1]-cy],m=Math.hypot(off[0],off[1]);
+      cctx.fillStyle=i===0?'#f59e0b':'#a855f7';cctx.beginPath();cctx.arc(p[0],p[1],6,0,6.283);cctx.fill();
+      cctx.fillStyle='#fff';cctx.font='bold 13px system-ui';cctx.textAlign='center';cctx.fillText(lab,p[0]+off[0]/m*16,p[1]+off[1]/m*16+4);
+      // angle value pulled slightly inward
+      var obt=angs[i]>=90;cctx.fillStyle=obt?'#fca5a5':'#86efac';cctx.font='bold 12px system-ui';
+      cctx.fillText(Math.round(angs[i])+'°',p[0]-off[0]/m*26,p[1]-off[1]/m*26+4);});
+    // center O — inside (acute) green, outside (not acute) red  ← the Example 1.4 test
+    cctx.fillStyle=good?'#22c55e':'#ef4444';cctx.beginPath();cctx.arc(cx,cy,5,0,6.283);cctx.fill();
+    cctx.strokeStyle='#fff';cctx.lineWidth=2;cctx.stroke();
+    cctx.fillStyle='#cbd5e1';cctx.font='bold 12px system-ui';cctx.textAlign='left';cctx.fillText('O',cx+9,cy+4);
+    document.getElementById('circ22-read').innerHTML='angles: <b>'+angs.map(function(a){return Math.round(a)+'°';}).join(', ')+'</b> '+
+      '(each = ½ its opposite arc) → '+
+      (good?'<span style="color:#86efac;font-weight:700;">all &lt; 90° → ACUTE ✓ &nbsp;O inside</span>':'<span style="color:#fca5a5;font-weight:700;">a corner ≥ 90° → not acute ✗ &nbsp;O outside</span>');
+  }
+  function drawSquare(){
+    qctx.clearRect(0,0,QW,QH);
+    qctx.fillStyle='rgba(34,197,94,0.20)';
+    qctx.beginPath();qctx.moveTo(PX(0),PY(0.5));qctx.lineTo(PX(0.5),PY(0.5));qctx.lineTo(PX(0.5),PY(1));qctx.closePath();qctx.fill();
+    qctx.beginPath();qctx.moveTo(PX(0.5),PY(0));qctx.lineTo(PX(0.5),PY(0.5));qctx.lineTo(PX(1),PY(0.5));qctx.closePath();qctx.fill();
+    mcPts.forEach(function(p){qctx.fillStyle=p.g?'rgba(34,197,94,0.85)':'rgba(239,68,68,0.4)';qctx.beginPath();qctx.arc(PX(p.x),PY(p.y),2,0,6.283);qctx.fill();});
+    qctx.strokeStyle='#3b82f6';qctx.lineWidth=2;qctx.strokeRect(PX(0),PY(1),sz,sz);
+    qctx.strokeStyle='rgba(148,163,184,0.4)';qctx.lineWidth=1;qctx.setLineDash([4,4]);
+    qctx.beginPath();qctx.moveTo(PX(0.5),PY(0));qctx.lineTo(PX(0.5),PY(1));qctx.stroke();
+    qctx.beginPath();qctx.moveTo(PX(0),PY(0.5));qctx.lineTo(PX(1),PY(0.5));qctx.stroke();qctx.setLineDash([]);
+    qctx.fillStyle='#94a3b8';qctx.font='11px system-ui';qctx.textAlign='center';
+    qctx.fillText('arc to pt 2',PX(0.5),QH-8);qctx.save();qctx.translate(12,PY(0.5));qctx.rotate(-Math.PI/2);qctx.fillText('arc to pt 3',0,0);qctx.restore();
+    var p=uv();qctx.fillStyle=ok(p[0],p[1])?'#22c55e':'#ef4444';qctx.beginPath();qctx.arc(PX(p[0]),PY(p[1]),6,0,6.283);qctx.fill();qctx.strokeStyle='#fff';qctx.lineWidth=2;qctx.stroke();
+  }
+  function redraw(){drawCircle();drawSquare();}
+  function pickXY(mx,my){var best=1e9;for(var i=0;i<3;i++){var p=pt(pang[i]),d=Math.hypot(mx-p[0],my-p[1]);if(d<best){best=d;drag=i;}}setXY(mx,my);}
+  function setXY(mx,my){if(drag<0)return;pang[drag]=Math.atan2(cy-my,mx-cx);redraw();}
+  cc.addEventListener('mousedown',function(e){var r=cc.getBoundingClientRect();pickXY(e.clientX-r.left,e.clientY-r.top);});
+  addEventListener('mousemove',function(e){if(drag<0)return;var r=cc.getBoundingClientRect();setXY(e.clientX-r.left,e.clientY-r.top);});
+  addEventListener('mouseup',function(){drag=-1;});
+  cc.addEventListener('touchstart',function(e){var r=cc.getBoundingClientRect();pickXY(e.touches[0].clientX-r.left,e.touches[0].clientY-r.top);e.preventDefault();},{passive:false});
+  cc.addEventListener('touchmove',function(e){if(drag<0)return;var r=cc.getBoundingClientRect();setXY(e.touches[0].clientX-r.left,e.touches[0].clientY-r.top);e.preventDefault();},{passive:false});
+  document.getElementById('mc22').onclick=function(){
+    if(run)return;run=true;mcPts=[];mcG=0;mcT=0;var T=3000;
+    (function add(){for(var i=0;i<60&&mcT<T;i++){var x=Math.random(),y=Math.random(),g=ok(x,y);mcPts.push({x:x,y:y,g:g});mcT++;if(g)mcG++;}
+      document.getElementById('sq22-read').innerHTML='Trials: <b>'+mcT+'</b> — empirical \\(P(\\text{acute})=\\) <b>'+(mcG/mcT).toFixed(3)+'</b> (target 1/4 = 0.25)';
+      drawSquare();mj();if(mcT<T)requestAnimationFrame(add);else run=false;})();
+  };
+  redraw();
+})();
+
+// ───────── Example 2.2 (P₁/P₂ boundary method, same as 1.4) ─────────
+(function(){
+  var cv=document.getElementById('c-p1p2-22');if(!cv)return;
+  var ctx=hidpi(cv),W=cv._w,H=cv._h,cx=W/2,cy=H/2,R=125;
+  var Aang=150*Math.PI/180, Bang=30*Math.PI/180;   // fixed points 1 and 2 (arc 1–2 = 120°)
+  var Pang=270*Math.PI/180, drag=false;
+  function pt(a,r){r=r||R;return[cx+r*Math.cos(a),cy-r*Math.sin(a)];}
+  function norm(a){return (a%(2*Math.PI)+2*Math.PI)%(2*Math.PI);}
+  function ang3(P,Q,Rr){var a1=Math.atan2(Q[1]-P[1],Q[0]-P[0]),a2=Math.atan2(Rr[1]-P[1],Rr[0]-P[0]);var d=Math.abs(a1-a2);if(d>Math.PI)d=2*Math.PI-d;return d*180/Math.PI;}
+  var P1ang=norm(Bang+Math.PI);   // antipode of 2  → boundary where ∠1 = 90°
+  var P2ang=norm(Aang+Math.PI);   // antipode of 1  → boundary where ∠2 = 90°
+  function lbl(p,a,off){return [p[0]+Math.cos(a)*off, p[1]-Math.sin(a)*off+4];}
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    var A=pt(Aang),B=pt(Bang),P=pt(Pang),P1=pt(P1ang),P2=pt(P2ang);
+    // valid green arc between P1 (210°) and P2 (330°), through the bottom (270°)
+    ctx.strokeStyle='rgba(34,197,94,0.40)';ctx.lineWidth=12;ctx.lineCap='round';
+    ctx.beginPath();ctx.arc(cx,cy,R,-P1ang,-P2ang,true);ctx.stroke();ctx.lineCap='butt';
+    // circle
+    ctx.strokeStyle='#3b82f6';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(cx,cy,R,0,6.283);ctx.stroke();
+    // the two diameters = perpendicular construction (2→P1 and 1→P2)
+    ctx.setLineDash([5,5]);ctx.lineWidth=1.2;ctx.strokeStyle='rgba(125,211,252,0.75)';
+    ctx.beginPath();ctx.moveTo(B[0],B[1]);ctx.lineTo(P1[0],P1[1]);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(A[0],A[1]);ctx.lineTo(P2[0],P2[1]);ctx.stroke();
+    ctx.setLineDash([]);
+    // triangle
+    var a1=ang3(A,B,P),a2=ang3(B,A,P),aP=ang3(P,A,B),good=a1<90&&a2<90&&aP<90;
+    ctx.fillStyle=good?'rgba(34,197,94,0.12)':'rgba(239,68,68,0.12)';
+    ctx.strokeStyle=good?'#22c55e':'#ef4444';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(A[0],A[1]);ctx.lineTo(B[0],B[1]);ctx.lineTo(P[0],P[1]);ctx.closePath();ctx.fill();ctx.stroke();
+    // center O
+    ctx.fillStyle=good?'#22c55e':'#ef4444';ctx.beginPath();ctx.arc(cx,cy,4,0,6.283);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+    // boundary points P1,P2
+    ctx.font='bold 12px system-ui';ctx.textAlign='center';
+    [[P1,'P₁',P1ang],[P2,'P₂',P2ang]].forEach(function(o){ctx.fillStyle='#7dd3fc';ctx.beginPath();ctx.arc(o[0][0],o[0][1],5,0,6.283);ctx.fill();var L=lbl(o[0],o[2],18);ctx.fillText(o[1],L[0],L[1]);});
+    // fixed points 1,2
+    [[A,'1',Aang],[B,'2',Bang]].forEach(function(o){ctx.fillStyle='#f59e0b';ctx.beginPath();ctx.arc(o[0][0],o[0][1],6,0,6.283);ctx.fill();ctx.fillStyle='#fff';var L=lbl(o[0],o[2],16);ctx.fillText(o[1],L[0],L[1]);});
+    // draggable P
+    ctx.fillStyle='#a855f7';ctx.beginPath();ctx.arc(P[0],P[1],7,0,6.283);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle='#fff';var LP=lbl(P,Pang,18);ctx.fillText('P',LP[0],LP[1]);
+    document.getElementById('p1p2-22-read').innerHTML='∠1='+Math.round(a1)+'°, ∠2='+Math.round(a2)+'°, ∠P='+Math.round(aP)+'° → '+
+      (good?'<span style="color:#86efac;font-weight:700;">P between P₁ and P₂ → ACUTE ✓</span>':'<span style="color:#fca5a5;font-weight:700;">P outside P₁–P₂ → a corner ≥ 90° ✗</span>');
+  }
+  function setP(mx,my){Pang=Math.atan2(cy-my,mx-cx);draw();}
+  cv.addEventListener('mousedown',function(e){drag=true;var r=cv.getBoundingClientRect();setP(e.clientX-r.left,e.clientY-r.top);});
+  addEventListener('mousemove',function(e){if(!drag)return;var r=cv.getBoundingClientRect();setP(e.clientX-r.left,e.clientY-r.top);});
+  addEventListener('mouseup',function(){drag=false;});
+  cv.addEventListener('touchstart',function(e){drag=true;var r=cv.getBoundingClientRect();setP(e.touches[0].clientX-r.left,e.touches[0].clientY-r.top);e.preventDefault();},{passive:false});
+  cv.addEventListener('touchmove',function(e){if(!drag)return;var r=cv.getBoundingClientRect();setP(e.touches[0].clientX-r.left,e.touches[0].clientY-r.top);e.preventDefault();},{passive:false});
+  draw();
+})();
+
+// ───────── Example 3.1 : square x+y>1 ─────────
+(function(){
+  var cv=document.getElementById('c-sq31'),ctx=hidpi(cv),W=cv._w,H=cv._h;
+  var pad=40,sz=W-2*pad;
+  function PX(x){return pad+(x+2)/4*sz;}      // map [-2,2]
+  function PY(y){return H-pad-(y+2)/4*sz;}
+  var pts=[],win=0,tot=0,running=false;
+  function base(){
+    ctx.clearRect(0,0,W,H);
+    // success triangle x+y>1
+    ctx.fillStyle='rgba(34,197,94,0.16)';
+    ctx.beginPath();ctx.moveTo(PX(-1),PY(2));ctx.lineTo(PX(2),PY(2));ctx.lineTo(PX(2),PY(-1));ctx.closePath();ctx.fill();
+    // square
+    ctx.strokeStyle='#3b82f6';ctx.lineWidth=2;ctx.strokeRect(PX(-2),PY(2),sz,sz);
+    // line
+    ctx.strokeStyle='#f59e0b';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(PX(-1),PY(2));ctx.lineTo(PX(2),PY(-1));ctx.stroke();
+    ctx.fillStyle='#f59e0b';ctx.font='13px system-ui';ctx.textAlign='left';ctx.fillText('x+y=1',PX(1),PY(0.4));
+    // axes labels
+    ctx.fillStyle=C2;ctx.font='11px system-ui';ctx.textAlign='center';
+    ctx.fillText('-2',PX(-2),H-pad+16);ctx.fillText('2',PX(2),H-pad+16);
+  }
+  function dots(){pts.forEach(function(p){ctx.fillStyle=p.w?'rgba(34,197,94,0.9)':'rgba(239,68,68,0.8)';ctx.beginPath();ctx.arc(PX(p.x),PY(p.y),2,0,6.283);ctx.fill();});}
+  function redraw(){base();dots();}
+  document.getElementById('mc31').onclick=function(){
+    if(running)return;running=true;pts=[];win=0;tot=0;var T=3000;
+    (function add(){for(var i=0;i<60&&tot<T;i++){var x=Math.random()*4-2,y=Math.random()*4-2,w=(x+y>1);pts.push({x:x,y:y,w:w});tot++;if(w)win++;}
+      document.getElementById('read31').innerHTML='Trials: <b>'+tot+'</b> — empirical \\(P=\\) <b>'+(win/tot).toFixed(3)+'</b> (target 9/32 ≈ 0.281)';
+      redraw();mj();if(tot<T)requestAnimationFrame(add);else running=false;})();
+  };
+  base();
+})();
+
+// ───────── Example 3.2 : obtuse triangle ─────────
+(function(){
+  var cv=document.getElementById('c-sq32'),ctx=hidpi(cv),W=cv._w,H=cv._h;
+  var pad=40,sz=W-2*pad;
+  function PX(x){return pad+x*sz;}            // map [0,1]
+  function PY(y){return H-pad-y*sz;}
+  function cls(x,y){ // classify triangle x,y,1
+    var s=[x,y,1].sort(function(a,b){return a-b;});
+    if(s[0]+s[1]<=s[2])return 'none';
+    var a=s[0]*s[0]+s[1]*s[1],c=s[2]*s[2];
+    if(Math.abs(a-c)<1e-9)return 'right';
+    return a<c?'obtuse':'acute';
+  }
+  var pts=[],ob=0,tot=0,running=false;
+  function base(){
+    ctx.clearRect(0,0,W,H);
+    // region: above line x+y=1 AND inside quarter circle
+    ctx.fillStyle='rgba(34,197,94,0.16)';
+    ctx.beginPath();
+    // boundary: along line x+y=1 from (1,0) to (0,1), then arc x^2+y^2=1 back
+    ctx.moveTo(PX(1),PY(0));ctx.lineTo(PX(0),PY(1));
+    for(var t=Math.PI/2;t>=0;t-=0.02){ctx.lineTo(PX(Math.cos(t)),PY(Math.sin(t)));}
+    ctx.closePath();ctx.fill();
+    // square
+    ctx.strokeStyle='#3b82f6';ctx.lineWidth=2;ctx.strokeRect(PX(0),PY(1),sz,sz);
+    // quarter circle
+    ctx.strokeStyle='#a855f7';ctx.lineWidth=2;ctx.beginPath();
+    for(var u=0;u<=Math.PI/2+0.001;u+=0.02){var X=PX(Math.cos(u)),Y=PY(Math.sin(u));if(u===0)ctx.moveTo(X,Y);else ctx.lineTo(X,Y);}ctx.stroke();
+    // line
+    ctx.strokeStyle='#f59e0b';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(PX(1),PY(0));ctx.lineTo(PX(0),PY(1));ctx.stroke();
+    ctx.fillStyle=C2;ctx.font='11px system-ui';ctx.textAlign='center';
+    ctx.fillText('x²+y²=1',PX(0.78),PY(0.78));ctx.fillText('x+y=1',PX(0.35),PY(0.35));
+    ctx.fillText('0',PX(0),H-pad+14);ctx.fillText('1',PX(1),H-pad+14);
+  }
+  function dots(){pts.forEach(function(p){ctx.fillStyle=p.ob?'rgba(34,197,94,0.95)':'rgba(239,68,68,0.55)';ctx.beginPath();ctx.arc(PX(p.x),PY(p.y),2,0,6.283);ctx.fill();});}
+  document.getElementById('mc32').onclick=function(){
+    if(running)return;running=true;pts=[];ob=0;tot=0;var T=4000;
+    (function add(){for(var i=0;i<80&&tot<T;i++){var x=Math.random(),y=Math.random(),o=(cls(x,y)==='obtuse');pts.push({x:x,y:y,ob:o});tot++;if(o)ob++;}
+      document.getElementById('read32').innerHTML='Trials: <b>'+tot+'</b> — empirical \\(P(\\text{obtuse})=\\) <b>'+(ob/tot).toFixed(3)+'</b> (≈ 0.29)';
+      base();dots();mj();if(tot<T)requestAnimationFrame(add);else running=false;})();
+  };
+  base();
+})();
+
+// ───────── Example 4.1 : lattice unit cell ─────────
+(function(){
+  var cv=document.getElementById('c-cell'),ctx=hidpi(cv),W=cv._w,H=cv._h;
+  var pad=40,sz=W-2*pad;var sl=document.getElementById('cell-slider');
+  function draw(d){
+    ctx.clearRect(0,0,W,H);
+    var x0=pad,y0=pad,x1=pad+sz,y1=pad+sz;
+    // quarter circles at 4 corners
+    ctx.fillStyle='rgba(59,130,246,0.30)';
+    function q(cxp,cyp,a0){ctx.beginPath();ctx.moveTo(cxp,cyp);ctx.arc(cxp,cyp,d*sz,a0,a0+Math.PI/2);ctx.closePath();ctx.fill();}
+    q(x0,y0,0);q(x1,y0,Math.PI/2);q(x1,y1,Math.PI);q(x0,y1,-Math.PI/2);
+    // cell
+    ctx.strokeStyle='#3b82f6';ctx.lineWidth=2;ctx.strokeRect(x0,y0,sz,sz);
+    // corner dots (lattice pts)
+    ctx.fillStyle='#f59e0b';[[x0,y0],[x1,y0],[x1,y1],[x0,y1]].forEach(function(p){ctx.beginPath();ctx.arc(p[0],p[1],4,0,6.283);ctx.fill();});
+    var frac=Math.PI*d*d;
+    document.getElementById('cell-d').textContent=d.toFixed(2);
+    document.getElementById('cell-read').innerHTML='covered fraction \\(=\\pi d^2=\\) <b>'+frac.toFixed(3)+'</b>'+
+      (Math.abs(frac-0.5)<0.01?' &nbsp;<span style="color:#86efac;font-weight:700;">≈ ½ ✓ so d ≈ 0.4</span>':'');
+    mj();
+  }
+  sl.oninput=function(){draw(+sl.value);};draw(+sl.value);
+})();
+
+// ───────── Example 4.2 : chord vs inner circle ─────────
+(function(){
+  var cv=document.getElementById('c-chord'),ctx=hidpi(cv),W=cv._w,H=cv._h;
+  var cx=W/2,cy=H/2,Rout=150,Rin=75;
+  var p1=0; // fixed first point at angle 0
+  var phi=Math.PI*0.7; // gap angle (radians)
+  var dragging=false;
+  var pts=[],hit=0,tot=0,running=false;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // MC chords faint
+    pts.forEach(function(q){ctx.strokeStyle=q.h?'rgba(34,197,94,0.18)':'rgba(239,68,68,0.10)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(cx+Rout*Math.cos(q.a),cy-Rout*Math.sin(q.a));ctx.lineTo(cx+Rout*Math.cos(q.b),cy-Rout*Math.sin(q.b));ctx.stroke();});
+    // circles
+    ctx.strokeStyle='#3b82f6';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,cy,Rout,0,6.283);ctx.stroke();
+    ctx.strokeStyle='#a855f7';ctx.beginPath();ctx.arc(cx,cy,Rin,0,6.283);ctx.stroke();
+    ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(cx,cy,3,0,6.283);ctx.fill();
+    // points
+    var a=p1,b=p1+phi;
+    var Ax=cx+Rout*Math.cos(a),Ay=cy-Rout*Math.sin(a);
+    var Bx=cx+Rout*Math.cos(b),By=cy-Rout*Math.sin(b);
+    var dist=Rout*Math.abs(Math.cos(phi/2)); // distance center->chord (in px, with Rout=2 units => /Rout*2)
+    var distUnits=2*Math.abs(Math.cos(phi/2));
+    var hits=distUnits<1;
+    ctx.strokeStyle=hits?'#22c55e':'#ef4444';ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(Ax,Ay);ctx.lineTo(Bx,By);ctx.stroke();
+    // points dots
+    ctx.fillStyle='#f59e0b';ctx.beginPath();ctx.arc(Ax,Ay,6,0,6.283);ctx.fill();
+    ctx.fillStyle='#a855f7';ctx.beginPath();ctx.arc(Bx,By,6,0,6.283);ctx.fill();
+    var deg=(phi*180/Math.PI);deg=((deg%360)+360)%360;
+    document.getElementById('read42').innerHTML='gap \\(\\varphi=\\) <b>'+deg.toFixed(0)+'°</b>, dist to center \\(=2\\cos\\frac{\\varphi}{2}=\\) <b>'+distUnits.toFixed(2)+'</b> → '+
+      (hits?'<span style="color:#86efac;font-weight:700;">intersects ✓</span>':'<span style="color:#fca5a5;font-weight:700;">misses ✗</span>')+
+      ' &nbsp;(win when \\(\\varphi\\in(120°,240°)\\); \\(P=1/3\\))';
+    mj();
+  }
+  function setXY(mx,my){var a=Math.atan2(cy-my,mx-cx);phi=a-p1;draw();}
+  cv.addEventListener('mousedown',function(e){dragging=true;var r=cv.getBoundingClientRect();setXY(e.clientX-r.left,e.clientY-r.top);});
+  addEventListener('mousemove',function(e){if(!dragging)return;var r=cv.getBoundingClientRect();setXY(e.clientX-r.left,e.clientY-r.top);});
+  addEventListener('mouseup',function(){dragging=false;});
+  cv.addEventListener('touchmove',function(e){var r=cv.getBoundingClientRect();var t=e.touches[0];setXY(t.clientX-r.left,t.clientY-r.top);e.preventDefault();},{passive:false});
+  document.getElementById('mc42').onclick=function(){
+    if(running)return;running=true;pts=[];hit=0;tot=0;var T=3000;
+    (function add(){for(var i=0;i<60&&tot<T;i++){var a=Math.random()*2*Math.PI,b=Math.random()*2*Math.PI;var g=Math.abs(a-b);var d=2*Math.abs(Math.cos(g/2));var h=d<1;pts.push({a:a,b:b,h:h});tot++;if(h)hit++;}
+      draw();
+      document.getElementById('read42').innerHTML+=' &nbsp;|&nbsp; trials <b>'+tot+'</b>, empirical <b>'+(hit/tot).toFixed(3)+'</b>';
+      if(tot<T)requestAnimationFrame(add);else running=false;})();
+  };
+  draw();
+})();
+
+// ═══════════════ HOMEWORK INTERACTIVES ═══════════════
+
+// ─── HW1: number line [-3,4], |x|<1 ───
+(function(){
+  var cv=document.getElementById('hwc1'),ctx=hidpi(cv),W=cv._w,H=cv._h,sl=document.getElementById('hws1');
+  var x0=50,x1=W-50,y=H/2,L=x1-x0;
+  function px(v){return x0+(v+3)/7*L;}
+  function draw(v){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='rgba(34,197,94,0.18)';ctx.fillRect(px(-1),y-26,px(1)-px(-1),52);
+    ctx.lineWidth=8;ctx.lineCap='round';ctx.strokeStyle='#1e3a5f';ctx.beginPath();ctx.moveTo(x0,y);ctx.lineTo(x1,y);ctx.stroke();
+    ctx.strokeStyle=C2;ctx.fillStyle=C2;ctx.font='12px system-ui';ctx.textAlign='center';ctx.lineWidth=1;
+    for(var t=-3;t<=4;t++){ctx.beginPath();ctx.moveTo(px(t),y-4);ctx.lineTo(px(t),y+4);ctx.stroke();ctx.fillText(t,px(t),y+26);}
+    var c=px(v),win=Math.abs(v)<1;
+    ctx.fillStyle=win?'#22c55e':'#ef4444';ctx.beginPath();ctx.arc(c,y,9,0,6.283);ctx.fill();ctx.strokeStyle='#050a18';ctx.lineWidth=2;ctx.stroke();
+    document.getElementById('hwr1').innerHTML='x = <b>'+v.toFixed(2)+'</b> → '+(win?'<span style="color:#86efac;font-weight:700;">|x| < 1 ✓</span>':'<span style="color:#fca5a5;font-weight:700;">|x| ≥ 1 ✗</span>')+' &nbsp; success length 2 / total 7 = <b>2/7</b>';
+  }
+  sl.oninput=function(){draw(+sl.value);};draw(0);
+})();
+
+// ─── HW2: dartboard ───
+(function(){
+  var cv=document.getElementById('hwc2'),ctx=hidpi(cv),W=cv._w,H=cv._h;
+  var cx=W/2,cy=H/2,u=(Math.min(W,H)/2-12)/6;
+  var pts=[],good=0,tot=0,run=false;
+  function base(){
+    ctx.clearRect(0,0,W,H);
+    for(var k=6;k>=1;k--){ctx.beginPath();ctx.arc(cx,cy,k*u,0,6.283);
+      ctx.fillStyle=(k<=2)?'rgba(34,197,94,0.20)':(k%2?'rgba(59,130,246,0.10)':'rgba(59,130,246,0.05)');
+      ctx.fill();ctx.strokeStyle='#1e3a5f';ctx.lineWidth=1;ctx.stroke();}
+    ctx.fillStyle=C2;ctx.font='10px system-ui';ctx.textAlign='center';
+    ctx.fillText('10',cx,cy-0.5*u+3);ctx.fillText('9',cx,cy-1.5*u+3);ctx.fillText('5',cx,cy-5.5*u+3);
+  }
+  function dots(){pts.forEach(function(p){ctx.fillStyle=p.g?'rgba(34,197,94,0.95)':'rgba(239,68,68,0.5)';ctx.beginPath();ctx.arc(cx+p.x*u,cy+p.y*u,2,0,6.283);ctx.fill();});}
+  document.getElementById('hwmc2').onclick=function(){
+    if(run)return;run=true;pts=[];good=0;tot=0;var T=2000;
+    (function add(){for(var i=0;i<50&&tot<T;i++){var ang=Math.random()*6.283,rr=6*Math.sqrt(Math.random());var g=rr<=2;pts.push({x:rr*Math.cos(ang),y:rr*Math.sin(ang),g:g});tot++;if(g)good++;}
+      document.getElementById('hwr2').innerHTML='Darts: <b>'+tot+'</b> — empirical \\(P=\\) <b>'+(good/tot).toFixed(3)+'</b> (target 1/9 ≈ 0.111)';
+      base();dots();mj();if(tot<T)requestAnimationFrame(add);else run=false;})();
+  };
+  base();
+})();
+
+// ─── HW3: President's-Proof trapezoid ───
+(function(){
+  var cv=document.getElementById('hwc3'),ctx=hidpi(cv),W=cv._w,H=cv._h;
+  var sc=90,ox=55,oy=H-45;
+  function PX(x){return ox+x*sc;}function PY(y){return oy-y*sc;}
+  var A=[0,0],B=[3,0],C=[3,1],D=[0,2],E=[1,0];
+  var trap=[A,B,C,D],tri=[D,C,E];
+  function inPoly(px,py,poly){var c=false;for(var i=0,j=poly.length-1;i<poly.length;j=i++){var xi=poly[i][0],yi=poly[i][1],xj=poly[j][0],yj=poly[j][1];if(((yi>py)!=(yj>py))&&(px<(xj-xi)*(py-yi)/(yj-yi)+xi))c=!c;}return c;}
+  var pts=[],good=0,tot=0,run=false;
+  function poly(p,fill,stroke){ctx.beginPath();p.forEach(function(v,i){var X=PX(v[0]),Y=PY(v[1]);if(i===0)ctx.moveTo(X,Y);else ctx.lineTo(X,Y);});ctx.closePath();if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=2;ctx.stroke();}}
+  function base(){
+    ctx.clearRect(0,0,W,H);
+    poly(trap,'rgba(59,130,246,0.08)','#3b82f6');
+    poly(tri,'rgba(34,197,94,0.20)','#22c55e');
+    ctx.fillStyle=C2;ctx.font='13px system-ui';ctx.textAlign='center';
+    ctx.fillText('A',PX(0)-12,PY(0)+6);ctx.fillText('B',PX(3)+12,PY(0)+6);ctx.fillText('C',PX(3)+12,PY(1));ctx.fillText('D',PX(0)-12,PY(2));ctx.fillText('E',PX(1),PY(0)+18);
+  }
+  function dots(){pts.forEach(function(p){ctx.fillStyle=p.g?'rgba(34,197,94,0.95)':'rgba(239,68,68,0.45)';ctx.beginPath();ctx.arc(PX(p.x),PY(p.y),2,0,6.283);ctx.fill();});}
+  document.getElementById('hwmc3').onclick=function(){
+    if(run)return;run=true;pts=[];good=0;tot=0;var T=3000;
+    (function add(){var att=0;for(var i=0;i<60&&tot<T&&att<4000;){att++;var x=Math.random()*3,y=Math.random()*2;if(!inPoly(x,y,trap))continue;var g=inPoly(x,y,tri);pts.push({x:x,y:y,g:g});tot++;if(g)good++;i++;}
+      document.getElementById('hwr3').innerHTML='Points: <b>'+tot+'</b> — empirical \\(P=\\) <b>'+(good/tot).toFixed(3)+'</b> (target 5/9 ≈ 0.556)';
+      base();dots();mj();if(tot<T)requestAnimationFrame(add);else run=false;})();
+  };
+  base();
+})();
+
+// ─── HW4: square [0,2]², both > 2/3 ───
+(function(){
+  var cv=document.getElementById('hwc4'),ctx=hidpi(cv),W=cv._w,H=cv._h;
+  var pad=36,sz=W-2*pad,th=2/3;
+  function PX(x){return pad+x/2*sz;}function PY(y){return H-pad-y/2*sz;}
+  var pts=[],good=0,tot=0,run=false;
+  function base(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='rgba(34,197,94,0.18)';ctx.fillRect(PX(th),PY(2),PX(2)-PX(th),PY(th)-PY(2));
+    ctx.strokeStyle='#3b82f6';ctx.lineWidth=2;ctx.strokeRect(PX(0),PY(2),sz,sz);
+    ctx.strokeStyle='#f59e0b';ctx.lineWidth=1.5;ctx.setLineDash([4,4]);
+    ctx.beginPath();ctx.moveTo(PX(th),PY(0));ctx.lineTo(PX(th),PY(2));ctx.stroke();
+    ctx.beginPath();ctx.moveTo(PX(0),PY(th));ctx.lineTo(PX(2),PY(th));ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=C2;ctx.font='11px system-ui';ctx.textAlign='center';
+    ctx.fillText('0',PX(0),H-pad+14);ctx.fillText('2',PX(2),H-pad+14);ctx.fillText('⅔',PX(th),H-pad+14);
+  }
+  function dots(){pts.forEach(function(p){ctx.fillStyle=p.g?'rgba(34,197,94,0.95)':'rgba(239,68,68,0.45)';ctx.beginPath();ctx.arc(PX(p.x),PY(p.y),2,0,6.283);ctx.fill();});}
+  document.getElementById('hwmc4').onclick=function(){
+    if(run)return;run=true;pts=[];good=0;tot=0;var T=3000;
+    (function add(){for(var i=0;i<60&&tot<T;i++){var x=Math.random()*2,y=Math.random()*2,g=(x>th&&y>th);pts.push({x:x,y:y,g:g});tot++;if(g)good++;}
+      document.getElementById('hwr4').innerHTML='Trials: <b>'+tot+'</b> — empirical \\(P=\\) <b>'+(good/tot).toFixed(3)+'</b> (target 4/9 ≈ 0.444)';
+      base();dots();mj();if(tot<T)requestAnimationFrame(add);else run=false;})();
+  };
+  base();
+})();
+
+// ─── HW5: number line b∈[-3,2], b>1 ───
+(function(){
+  var cv=document.getElementById('hwc5'),ctx=hidpi(cv),W=cv._w,H=cv._h,sl=document.getElementById('hws5');
+  var x0=55,x1=W-50,y=H/2,L=x1-x0;
+  function px(v){return x0+(v+3)/5*L;}
+  function draw(v){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='rgba(34,197,94,0.18)';ctx.fillRect(px(1),y-26,px(2)-px(1),52);
+    ctx.lineWidth=8;ctx.lineCap='round';ctx.strokeStyle='#1e3a5f';ctx.beginPath();ctx.moveTo(x0,y);ctx.lineTo(x1,y);ctx.stroke();
+    ctx.strokeStyle=C2;ctx.fillStyle=C2;ctx.font='12px system-ui';ctx.textAlign='center';ctx.lineWidth=1;
+    for(var t=-3;t<=2;t++){ctx.beginPath();ctx.moveTo(px(t),y-4);ctx.lineTo(px(t),y+4);ctx.stroke();ctx.fillText(t,px(t),y+26);}
+    ctx.textAlign='right';ctx.fillText('b',x0-12,y+5);ctx.textAlign='center';
+    var c=px(v),win=v>1;
+    ctx.fillStyle=win?'#22c55e':'#ef4444';ctx.beginPath();ctx.arc(c,y,9,0,6.283);ctx.fill();ctx.strokeStyle='#050a18';ctx.lineWidth=2;ctx.stroke();
+    document.getElementById('hwr5').innerHTML='b = <b>'+v.toFixed(2)+'</b> &nbsp;(x-intercept = '+(-v).toFixed(2)+') → '+(win?'<span style="color:#86efac;font-weight:700;">b > 1 ✓</span>':'<span style="color:#fca5a5;font-weight:700;">b ≤ 1 ✗</span>')+' &nbsp; success 1 / total 5 = <b>1/5</b>';
+  }
+  sl.oninput=function(){draw(+sl.value);};draw(-0.5);
+})();
+
+// ─── HW6: rope [0,5], both ≥ 2 ───
+(function(){
+  var cv=document.getElementById('hwc6'),ctx=hidpi(cv),W=cv._w,H=cv._h,sl=document.getElementById('hws6');
+  var x0=50,x1=W-50,y=H/2,L=x1-x0;
+  function px(v){return x0+v/5*L;}
+  function draw(v){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='rgba(34,197,94,0.18)';ctx.fillRect(px(2),y-30,px(3)-px(2),60);
+    ctx.lineWidth=10;ctx.lineCap='round';
+    ctx.strokeStyle='#3b82f6';ctx.beginPath();ctx.moveTo(x0,y);ctx.lineTo(px(v),y);ctx.stroke();
+    ctx.strokeStyle='#f59e0b';ctx.beginPath();ctx.moveTo(px(v),y);ctx.lineTo(x1,y);ctx.stroke();
+    ctx.strokeStyle=C2;ctx.fillStyle=C2;ctx.font='12px system-ui';ctx.textAlign='center';ctx.lineWidth=1;ctx.setLineDash([4,4]);
+    [2,3].forEach(function(t){ctx.beginPath();ctx.moveTo(px(t),y-38);ctx.lineTo(px(t),y+38);ctx.stroke();});ctx.setLineDash([]);
+    for(var t=0;t<=5;t++){ctx.fillText(t,px(t),y+52);}
+    var c=px(v);ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(c,y,8,0,6.283);ctx.fill();ctx.strokeStyle='#050a18';ctx.lineWidth=2;ctx.stroke();
+    var a=v,b=5-v,win=(a>=2&&b>=2);
+    document.getElementById('hwr6').innerHTML='left = <b>'+a.toFixed(2)+'</b>, right = <b>'+b.toFixed(2)+'</b> → '+(win?'<span style="color:#86efac;font-weight:700;">both ≥ 2 ✓</span>':'<span style="color:#fca5a5;font-weight:700;">a piece < 2 ✗</span>')+' &nbsp; window [2,3] length 1 / 5 = <b>1/5</b>';
+  }
+  sl.oninput=function(){draw(+sl.value);};draw(2.5);
+})();
+
+// ─── HW7: Reuleaux triangle ───
+(function(){
+  var cv=document.getElementById('hwc7'),ctx=hidpi(cv),W=cv._w,H=cv._h;
+  var cx=W/2,cy=H/2+8,Lp=150,Rc=Lp/Math.sqrt(3);
+  var ang=[-Math.PI/2,Math.PI/6,5*Math.PI/6];
+  var V=ang.map(function(a){return [cx+Rc*Math.cos(a),cy+Rc*Math.sin(a)];});
+  function inTri(p){
+    function s(a,b,c){return (a[0]-c[0])*(b[1]-c[1])-(b[0]-c[0])*(a[1]-c[1]);}
+    var d1=s(p,V[0],V[1]),d2=s(p,V[1],V[2]),d3=s(p,V[2],V[0]);
+    var neg=(d1<0)||(d2<0)||(d3<0),pos=(d1>0)||(d2>0)||(d3>0);return !(neg&&pos);
+  }
+  function inReu(p){for(var i=0;i<3;i++){var dx=p[0]-V[i][0],dy=p[1]-V[i][1];if(dx*dx+dy*dy>Lp*Lp)return false;}return true;}
+  function arcSeg(center,p1,p2){var a1=Math.atan2(p1[1]-center[1],p1[0]-center[0]),a2=Math.atan2(p2[1]-center[1],p2[0]-center[0]);var d=a2-a1;while(d<=-Math.PI)d+=2*Math.PI;while(d>Math.PI)d-=2*Math.PI;ctx.arc(center[0],center[1],Lp,a1,a2,d<0);}
+  var pts=[],good=0,tot=0,run=false;
+  function base(){
+    ctx.clearRect(0,0,W,H);
+    ctx.beginPath();ctx.moveTo(V[1][0],V[1][1]);arcSeg(V[0],V[1],V[2]);arcSeg(V[1],V[2],V[0]);arcSeg(V[2],V[0],V[1]);ctx.closePath();
+    ctx.fillStyle='rgba(168,85,247,0.10)';ctx.fill();ctx.strokeStyle='#a855f7';ctx.lineWidth=2;ctx.stroke();
+    ctx.beginPath();V.forEach(function(v,i){if(i===0)ctx.moveTo(v[0],v[1]);else ctx.lineTo(v[0],v[1]);});ctx.closePath();
+    ctx.fillStyle='rgba(34,197,94,0.20)';ctx.fill();ctx.strokeStyle='#22c55e';ctx.lineWidth=2;ctx.stroke();
+  }
+  function dots(){pts.forEach(function(p){ctx.fillStyle=p.g?'rgba(34,197,94,0.95)':'rgba(239,68,68,0.45)';ctx.beginPath();ctx.arc(p.x,p.y,2,0,6.283);ctx.fill();});}
+  document.getElementById('hwmc7').onclick=function(){
+    if(run)return;run=true;pts=[];good=0;tot=0;var T=3000;
+    (function add(){var att=0;for(var i=0;i<40&&tot<T&&att<6000;){att++;var x=cx+(Math.random()*2-1)*Lp,y=cy+(Math.random()*2-1)*Lp;if(!inReu([x,y]))continue;var g=inTri([x,y]);pts.push({x:x,y:y,g:g});tot++;if(g)good++;i++;}
+      document.getElementById('hwr7').innerHTML='Points: <b>'+tot+'</b> — empirical \\(P=\\) <b>'+(good/tot).toFixed(3)+'</b> (target ≈ 0.610)';
+      base();dots();mj();if(tot<T)requestAnimationFrame(add);else run=false;})();
+  };
+  base();
+})();
+
+// ─── HW8: square side 2, far from all 4 corners ───
+(function(){
+  var cv=document.getElementById('hwc8'),ctx=hidpi(cv),W=cv._w,H=cv._h;
+  var pad=36,sz=W-2*pad,rpx=sz/2;
+  function PX(x){return pad+x/2*sz;}function PY(y){return H-pad-y/2*sz;}
+  var corners=[[0,0],[2,0],[2,2],[0,2]];
+  function farAll(x,y){for(var i=0;i<4;i++){var dx=x-corners[i][0],dy=y-corners[i][1];if(dx*dx+dy*dy<1)return false;}return true;}
+  var pts=[],good=0,tot=0,run=false;
+  function base(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='rgba(34,197,94,0.14)';ctx.fillRect(PX(0),PY(2),sz,sz);
+    ctx.save();ctx.beginPath();ctx.rect(PX(0),PY(2),sz,sz);ctx.clip();
+    ctx.fillStyle='rgba(59,130,246,0.22)';
+    corners.forEach(function(c){ctx.beginPath();ctx.arc(PX(c[0]),PY(c[1]),rpx,0,6.283);ctx.fill();});
+    ctx.restore();
+    ctx.strokeStyle='#3b82f6';ctx.lineWidth=2;ctx.strokeRect(PX(0),PY(2),sz,sz);
+    ctx.fillStyle=C2;ctx.font='12px system-ui';ctx.textAlign='center';
+    ctx.fillText('A',PX(0)-10,PY(0)+16);ctx.fillText('B',PX(2)+10,PY(0)+16);ctx.fillText('C',PX(2)+10,PY(2)-4);ctx.fillText('D',PX(0)-10,PY(2)-4);
+  }
+  function dots(){pts.forEach(function(p){ctx.fillStyle=p.g?'rgba(34,197,94,0.95)':'rgba(239,68,68,0.4)';ctx.beginPath();ctx.arc(PX(p.x),PY(p.y),2,0,6.283);ctx.fill();});}
+  document.getElementById('hwmc8').onclick=function(){
+    if(run)return;run=true;pts=[];good=0;tot=0;var T=3000;
+    (function add(){for(var i=0;i<60&&tot<T;i++){var x=Math.random()*2,y=Math.random()*2,g=farAll(x,y);pts.push({x:x,y:y,g:g});tot++;if(g)good++;}
+      document.getElementById('hwr8').innerHTML='Trials: <b>'+tot+'</b> — empirical \\(P=\\) <b>'+(good/tot).toFixed(3)+'</b> (target 1−π/4 ≈ 0.215)';
+      base();dots();mj();if(tot<T)requestAnimationFrame(add);else run=false;})();
+  };
+  base();
+})();
+
+// ─── HW9: random point inside isosceles right triangle, dist to right angle < 1 ───
+(function(){
+  var cv=document.getElementById('hwc9'),ctx=hidpi(cv),W=cv._w,H=cv._h;
+  var sc=115,ox=70,oy=H-70;
+  function PX(x){return ox+x*sc;}function PY(y){return oy-y*sc;}
+  var pts=[],g=0,n=0,run=false;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // favorable quarter-disk (radius 1) at O
+    ctx.fillStyle='rgba(34,197,94,0.20)';
+    ctx.beginPath();ctx.moveTo(PX(0),PY(0));ctx.lineTo(PX(1),PY(0));ctx.arc(PX(0),PY(0),sc,0,-Math.PI/2,true);ctx.closePath();ctx.fill();
+    // triangle outline
+    ctx.fillStyle='rgba(59,130,246,0.05)';ctx.strokeStyle='#3b82f6';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(PX(0),PY(0));ctx.lineTo(PX(2),PY(0));ctx.lineTo(PX(0),PY(2));ctx.closePath();ctx.fill();ctx.stroke();
+    // arc edge radius 1
+    ctx.strokeStyle='#22c55e';ctx.lineWidth=2;ctx.beginPath();ctx.arc(PX(0),PY(0),sc,-Math.PI/2,0);ctx.stroke();
+    // scattered points
+    pts.forEach(function(p){ctx.fillStyle=p.g?'rgba(34,197,94,0.85)':'rgba(239,68,68,0.4)';ctx.beginPath();ctx.arc(PX(p.x),PY(p.y),2,0,6.283);ctx.fill();});
+    ctx.fillStyle=C2;ctx.font='12px system-ui';ctx.textAlign='center';
+    ctx.fillText('O (right angle)',PX(0)+48,PY(0)+18);ctx.fillText('A',PX(2)+12,PY(0)+4);ctx.fillText('B',PX(0)-12,PY(2));
+    ctx.fillStyle='#86efac';ctx.fillText('r = 1',PX(0)+sc*0.66,PY(0)-sc*0.30);
+  }
+  document.getElementById('hwmc9').onclick=function(){
+    if(run)return;run=true;pts=[];g=0;n=0;var T=3000;
+    (function add(){var i=0;while(i<60&&n<T){var x=Math.random()*2,y=Math.random()*2;if(x+y>2)continue;var win=x*x+y*y<1;pts.push({x:x,y:y,g:win});n++;if(win)g++;i++;}
+      document.getElementById('hwr9').innerHTML='Trials: <b>'+n+'</b> — empirical \\(P=\\) <b>'+(g/n).toFixed(3)+'</b> (target π/8 ≈ 0.393)';
+      draw();mj();if(n<T)requestAnimationFrame(add);else run=false;})();
+  };
+  draw();
+  document.getElementById('hwr9').innerHTML='Favorable = quarter‑disk (radius 1) ÷ triangle area 2. Press run → converges to <b>π/8 ≈ 0.393</b>.';
+})();
+
+// ─── HW10: bus waiting time ───
+(function(){
+  var cv=document.getElementById('hwc10'),ctx=hidpi(cv),W=cv._w,H=cv._h,sl=document.getElementById('hws10');
+  var x0=60,x1=W-60,y=H/2+6,L=x1-x0;
+  function px(t){return x0+t/40*L;}
+  function fmt(t){var m=470+t,hh=Math.floor(m/60),mm=Math.round(m%60);return hh+':'+(mm<10?'0':'')+mm;}
+  function draw(t){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='rgba(34,197,94,0.18)';ctx.fillRect(px(0),y-22,px(10)-px(0),44);ctx.fillRect(px(30),y-22,px(40)-px(30),44);
+    ctx.lineWidth=8;ctx.lineCap='round';ctx.strokeStyle='#1e3a5f';ctx.beginPath();ctx.moveTo(x0,y);ctx.lineTo(x1,y);ctx.stroke();
+    ctx.font='12px system-ui';ctx.textAlign='center';
+    [[10,'🚌 8:00'],[40,'🚌 8:30']].forEach(function(b){ctx.strokeStyle='#f59e0b';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(px(b[0]),y-26);ctx.lineTo(px(b[0]),y+26);ctx.stroke();ctx.fillStyle='#f59e0b';ctx.fillText(b[1],px(b[0]),y-34);});
+    ctx.fillStyle=C2;ctx.fillText('7:50',x0,y+40);ctx.fillText('8:30',x1,y+40);
+    var win=(t<=10)||(t>=30),wait=(t<=10)?(10-t):(40-t);
+    var c=px(t);ctx.fillStyle=win?'#22c55e':'#ef4444';ctx.beginPath();ctx.arc(c,y,9,0,6.283);ctx.fill();ctx.strokeStyle='#050a18';ctx.lineWidth=2;ctx.stroke();
+    document.getElementById('hwr10').innerHTML='arrive <b>'+fmt(t)+'</b> → wait <b>'+wait.toFixed(1)+' min</b> '+(win?'<span style="color:#86efac;font-weight:700;">≤ 10 ✓</span>':'<span style="color:#fca5a5;font-weight:700;"> > 10 ✗</span>')+' &nbsp; favorable 20 / 40 = <b>1/2</b>';
+  }
+  sl.oninput=function(){draw(+sl.value);};draw(15);
+})();
+</script>
+</body>
+</html>

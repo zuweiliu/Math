@@ -1,0 +1,113 @@
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Lesson 00 — Generator Demo</title>
+        <link rel="stylesheet" href="../../common/lesson.css">
+        <script src="../../common/lesson.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+        </head>
+        <body>
+        <canvas id="stars"></canvas>
+
+        <div id="topbar">
+          <div class="logo">📐 Demo</div>
+          <nav>
+            <a href="#idea">Big Idea</a>
+    <a href="#ex">Example</a>
+    <a href="#hw">Homework</a>
+    <a href="#cheat">Cheat Sheet</a>
+          </nav>
+        </div>
+
+        <div class="wrap">
+
+        <div class="hero">
+          <div class="tag">lessonkit · sample</div>
+  <h1>Lesson 00 — Generator Demo</h1>
+          <p>A tiny lesson proving the build pipeline: cards, formulas, a Monte-Carlo area sim, a draggable number-line sim, a quiz, homework and a cheat sheet.</p>
+        </div>
+
+        <h2 class="sec" id="idea">The Big Idea</h2>
+
+<div class="card glow amber"><p style="color:var(--text);font-size:1.05rem;">Geometric probability replaces <b style="color:#fff">counting</b> with <b style="color:#fff">measuring</b>.</p></div>
+
+<div class="formula">\[ P(\text{event})=\frac{\text{measure of success region}}{\text{measure of whole region}} \]</div>
+
+<div class="card"><p style="color:var(--text);font-weight:600;">Two random numbers ⇒ which measure?</p><div class="choices" data-quiz><button class="choice">length</button><button class="choice" data-correct>area</button><button class="choice">volume</button></div>
+</div>
+
+<h3 class="ex">Example — P(x + y > 1) <span class="pill">unit square</span></h3>
+
+<div class="card amber"><p style="color:var(--text);margin:0;">\(x,y\) are chosen uniformly from \([0,1]\). Find \(P(x+y>1)\).</p></div>
+<div class="card"><div class="simwrap">
+  <canvas id="cex" class="sim" width="360" height="360"></canvas>
+  <div class="controls"><button class="btn amber" id="cex-run">▶ Run 3000 points</button></div>
+  <div class="readout" id="cex-read"></div>
+  <div class="cap">Green = success region above the line \(x+y=1\). Empirical \(P\) → 1/2.</div>
+</div>
+<button class="btn ghost" onclick="rev('cex-sol')">Show step‑by‑step ▸</button>
+<div class="reveal" id="cex-sol"><div class="steps">
+    <div class="stepline"><div class="n"></div><div class="b">Two random numbers ⇒ the sample space is the <b>unit square</b>, area 1.</div></div>
+    <div class="stepline"><div class="n"></div><div class="b">The line \(x+y=1\) splits it into two equal triangles.</div></div>
+    <div class="stepline"><div class="n"></div><div class="b">The upper triangle is the success set, area \(\tfrac12\). \(P=\) <span class='answer'>1/2</span>.</div></div>
+</div>
+</div>
+<div class="method">
+  <div class="h">🔑 TYPE — two uniform numbers + a linear condition</div>
+  <b>METHOD:</b> draw the square, draw the boundary line, shade the correct side, divide its area by the square's area.
+</div>
+</div>
+
+<h2 class="sec" id="hw">Homework</h2>
+
+<div class="hw">
+  <span class="hwnum">HW 1</span><span class="pill">length on a segment</span>
+  <p style="color:var(--text);">A point is chosen at random on \([0,3]\). Find \(P(\text{point} < 1)\).</p>
+<div class="simwrap">
+  <canvas id="hw1" class="sim" width="700" height="120"></canvas>
+  <div class="readout" id="hw1-read"></div>
+</div>
+
+<button class="btn ghost" onclick="rev('h1')">Reveal ▸</button>
+<div class="reveal" id="h1"><div class="card prob">Success interval \([0,1]\) has length 1 out of 3. \(P=\) <span class='answer'>1/3</span>.</div></div>
+
+</div>
+
+<div class="hw">
+  <span class="hwnum">HW 2</span><span class="pill">area · circle in square</span>
+  <p style="color:var(--text);">A point lands uniformly in a \(2\times2\) square. Find \(P(\text{within 1 of the center})\).</p>
+<div class="simwrap">
+  <canvas id="hw2" class="sim" width="340" height="340"></canvas>
+  <div class="controls"><button class="btn amber" id="hw2-run">▶ Run 3000 points</button></div>
+  <div class="readout" id="hw2-read"></div>
+</div>
+
+<button class="btn ghost" onclick="rev('h2')">Reveal ▸</button>
+<div class="reveal" id="h2"><div class="card prob">Favorable = unit disk area \(\pi\); square area 4. \(P=\) <span class='answer'>π/4 ≈ 0.785</span>.</div></div>
+
+</div>
+
+<hr class="div">
+
+<h2 class="sec" id="cheat">Cheat Sheet</h2>
+
+<table class="cheat"><tr><th>Random quantities</th><th>Sample space</th><th>Measure</th></tr><tr><td>1 number</td><td>an interval</td><td><b style='color:var(--accent2)'>length</b></td></tr><tr><td>2 numbers</td><td>a square/region</td><td><b style='color:var(--accent2)'>area</b></td></tr><tr><td>3 numbers</td><td>a cube/solid</td><td><b style='color:var(--accent2)'>volume</b></td></tr></table>
+
+
+        <div class="foot">Generated with lessonkit · Olivia's Math Lessons</div>
+        </div>
+
+        <script>
+        GP.ready(function(){
+        GP.monteCarlo({canvas:'cex',test:function(x,y){return x+y>1;},readout:'cex-read',button:'cex-run',target:'1/2 = 0.5',drawRegion:function(ctx,M){ctx.beginPath();ctx.moveTo(M.X(0),M.Y(1));ctx.lineTo(M.X(1),M.Y(1));ctx.lineTo(M.X(1),M.Y(0));ctx.closePath();ctx.fill();},axisX:'x',axisY:'y'});
+
+GP.numberLine({canvas:'hw1',min:0,max:3,readout:'hw1-read',start:1,success:function(t){return t<1;},regions:[[0,1]],prob:'1/3'});
+
+GP.monteCarlo({canvas:'hw2',test:function(x,y){var dx=x-0.5,dy=y-0.5;return dx*dx+dy*dy<0.25;},readout:'hw2-read',button:'hw2-run',target:'π/4 ≈ 0.785',drawRegion:function(ctx,M){ctx.beginPath();ctx.arc(M.X(0.5),M.Y(0.5),M.sz*0.5,0,6.283);ctx.fill();}});
+        mj();
+        });
+        </script>
+        </body>
+        </html>

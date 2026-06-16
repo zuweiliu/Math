@@ -1,0 +1,132 @@
+/* ══════════════════════════════════════════════════════════
+   Olivia's Math Lessons — Shared Theme & Components
+   Used by every generated lesson (linked, not inlined).
+   ══════════════════════════════════════════════════════════ */
+
+:root{
+  --space:#050a18; --deep:#0a1628; --card:#0f1f3d; --accent:#3b82f6; --accent2:#f59e0b;
+  --green:#22c55e; --red:#ef4444; --purple:#a855f7; --text:#e2e8f0; --muted:#94a3b8;
+  --border:#1e3a5f; --glow:rgba(59,130,246,0.25);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--space);color:var(--text);line-height:1.7;}
+canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* ── nav ── */
+#topbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(5,10,24,0.92);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:8px 16px;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+#topbar .logo{font-weight:800;color:var(--accent);white-space:nowrap;font-size:0.95rem;}
+#topbar nav{display:flex;gap:6px;flex-wrap:wrap;}
+#topbar a{font-size:0.78rem;color:var(--muted);text-decoration:none;padding:3px 9px;border-radius:8px;
+  border:1px solid transparent;transition:.2s;}
+#topbar a:hover{color:var(--text);border-color:var(--border);background:rgba(59,130,246,.1);}
+
+.wrap{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:80px 18px 80px;}
+.hero{text-align:center;padding:30px 10px 10px;}
+.hero h1{font-size:clamp(1.9rem,5vw,3rem);font-weight:800;line-height:1.15;margin-bottom:10px;}
+.hero h1 span{color:var(--accent);}
+.hero p{color:var(--muted);max-width:680px;margin:0 auto;}
+
+h2.sec{font-size:1.7rem;margin:46px 0 6px;border-left:5px solid var(--accent);padding-left:14px;}
+h3.ex{font-size:1.25rem;color:var(--accent2);margin:30px 0 6px;}
+
+/* ── cards ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 26px;margin:16px 0;}
+.card.glow{box-shadow:0 0 30px var(--glow);}
+.card.amber{border-color:var(--accent2);background:rgba(245,158,11,.07);}
+.card.green{border-color:var(--green);background:rgba(34,197,94,.07);}
+.card.purple{border-color:var(--purple);background:rgba(168,85,247,.08);}
+.card.prob{border-color:var(--accent);background:rgba(59,130,246,.07);}
+
+.tag{display:inline-block;background:rgba(59,130,246,.15);border:1px solid var(--accent);color:var(--accent);
+  border-radius:20px;padding:3px 12px;font-size:.72rem;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;margin-bottom:10px;}
+.tag.src{background:rgba(245,158,11,.12);border-color:var(--accent2);color:var(--accent2);}
+
+.formula{background:rgba(59,130,246,.1);border:2px solid var(--accent);border-radius:12px;
+  padding:14px 18px;text-align:center;margin:14px 0;overflow-x:auto;}
+
+.method{border:1px solid var(--accent2);background:rgba(245,158,11,.08);border-radius:14px;
+  padding:16px 20px;margin:14px 0;}
+.method .h{font-weight:800;color:var(--accent2);margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+.method b{color:var(--text);}
+
+/* ── buttons ── */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:10px;font-size:.88rem;
+  font-weight:600;cursor:pointer;transition:.2s;border:none;background:var(--accent);color:#fff;}
+.btn:hover{background:#2563eb;transform:translateY(-1px);}
+.btn.ghost{background:transparent;border:1.5px solid var(--accent);color:var(--accent);}
+.btn.ghost:hover{background:rgba(59,130,246,.12);}
+.btn.amber{background:var(--accent2);}
+.btn.amber:hover{background:#d97706;}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+
+/* ── reveal ── */
+.reveal{display:none;margin-top:12px;animation:fade .4s ease;}
+.reveal.show{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── numbered steps ── */
+.steps{counter-reset:s;}
+.stepline{display:flex;gap:12px;margin:10px 0;align-items:flex-start;}
+.stepline .n{counter-increment:s;background:var(--accent);color:#fff;border-radius:50%;width:28px;height:28px;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;}
+.stepline .n::before{content:counter(s);}
+.stepline .b{flex:1;}
+
+/* ── sims ── */
+.simwrap{display:flex;flex-direction:column;align-items:center;gap:8px;margin:12px 0;}
+canvas.sim{max-width:100%;border-radius:12px;border:1px solid var(--border);background:#071021;display:block;}
+.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center;margin:6px 0;}
+.controls label{font-size:.82rem;color:var(--muted);}
+input[type=range]{accent-color:var(--accent);width:200px;max-width:60vw;}
+.val{color:var(--accent);font-weight:700;}
+.readout{font-size:.9rem;color:var(--muted);text-align:center;}
+.readout b{color:var(--accent2);}
+.cap{font-size:.8rem;color:var(--muted);text-align:center;max-width:560px;margin:0 auto;}
+
+/* ── thinking path ── */
+.thinkbar{display:flex;flex-direction:column;gap:6px;width:100%;max-width:560px;margin:6px auto;}
+.thinkstep{padding:9px 13px;border:1px solid var(--border);border-radius:10px;background:var(--deep);
+  font-size:.86rem;color:var(--muted);transition:.3s;opacity:.45;}
+.thinkstep.active{opacity:1;border-color:var(--accent);background:rgba(59,130,246,.12);color:var(--text);
+  box-shadow:0 0 14px var(--glow);}
+.thinkstep.done{opacity:.85;border-color:var(--green);color:#bbf7d0;}
+.thinkstep b{color:var(--accent2);}
+
+/* ── answers & choices ── */
+.answer{display:inline-block;background:rgba(34,197,94,.15);border:1px solid var(--green);color:#86efac;
+  padding:3px 12px;border-radius:8px;font-weight:700;}
+.choices{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0;}
+.choice{padding:6px 14px;border:1.5px solid var(--border);border-radius:9px;background:var(--deep);
+  cursor:pointer;font-size:.9rem;transition:.2s;color:var(--text);}
+.choice:hover{border-color:var(--accent);}
+.choice.correct{border-color:var(--green);background:rgba(34,197,94,.15);color:#86efac;}
+.choice.wrong{border-color:var(--red);background:rgba(239,68,68,.15);color:#fca5a5;}
+
+/* ── cheat table ── */
+table.cheat{width:100%;border-collapse:collapse;font-size:.86rem;margin:10px 0;}
+table.cheat th{text-align:left;padding:8px 10px;color:var(--accent);border-bottom:2px solid var(--border);}
+table.cheat td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.06);vertical-align:top;}
+table.cheat tr:hover{background:rgba(59,130,246,.06);}
+
+/* ── homework ── */
+.hw{background:var(--deep);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin:12px 0;}
+.hwnum{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:.78rem;font-weight:700;
+  display:inline-block;margin-bottom:8px;}
+.pill{display:inline-block;font-size:.72rem;padding:2px 9px;border-radius:20px;margin-left:6px;
+  background:rgba(168,85,247,.15);border:1px solid var(--purple);color:#d8b4fe;}
+hr.div{border:none;border-top:1px solid var(--border);margin:30px 0;}
+a.up{color:var(--accent);text-decoration:none;font-size:.8rem;}
+
+/* ── footer ── */
+.foot{text-align:center;color:var(--muted);font-size:.8rem;margin-top:40px;padding-top:20px;
+  border-top:1px solid var(--border);}
+
+/* ── responsive ── */
+@media (max-width:600px){
+  .card{padding:18px;}
+  .hero h1{font-size:1.6rem;}
+}
