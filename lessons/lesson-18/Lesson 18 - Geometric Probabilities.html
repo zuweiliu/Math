@@ -133,6 +133,7 @@ a.up{color:var(--accent);text-decoration:none;font-size:.8rem;}
     <a href="#ex13">★ Whose # is bigger</a>
     <a href="#s2">§2 Areas</a>
     <a href="#hw">Homework</a>
+    <a href="#practice">Practice by Type</a>
     <a href="#cheat">Cheat Sheet</a>
   </nav>
 </div>
@@ -636,6 +637,67 @@ a.up{color:var(--accent);text-decoration:none;font-size:.8rem;}
   </div>
   <button class="btn ghost" onclick="rev('h10')">Reveal ▸</button>
   <div class="reveal" id="h10"><div class="card prob">Window \(=40\) min. Wait \(\le10\) if you arrive in \([7{:}50,8{:}00]\) (catch 8:00) or \([8{:}20,8{:}30]\) (catch 8:30): \(10+10=20\) min. \(P=\dfrac{20}{40}=\) <span class="answer">1/2</span>.</div></div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PRACTICE BY TYPE
+     ════════════════════════════════════════════════════════ -->
+<hr class="div">
+<h2 class="sec" id="practice">Practice by Type — with full solutions</h2>
+<p style="color:var(--muted);">Each problem targets one method type from this lesson. Try first, then reveal the solution.</p>
+
+<div class="card">
+  <h3 style="color:var(--accent2);">Type A — One random number on an interval (length ratio)</h3>
+  <p style="color:var(--text);"><b>Q1.</b> A number \(x\) is chosen uniformly from \([-4,6]\). Find \(P(|x-1|<2)\).</p>
+  <button class="btn ghost" onclick="rev('prac1')">Reveal solution ▸</button>
+  <div class="reveal" id="prac1"><div class="card prob">\(|x-1|<2\Rightarrow -1<x<3\), so success length \(=4\). Total length \(=10\). Therefore \(P=\dfrac{4}{10}=\) <span class="answer">2/5</span>.</div></div>
+</div>
+
+<div class="card">
+  <h3 style="color:var(--accent2);">Type B — Two random numbers (unit square area)</h3>
+  <p style="color:var(--text);"><b>Q2.</b> \(x,y\) are chosen uniformly from \([0,1]\). Find \(P(x+y<0.6)\).</p>
+  <button class="btn ghost" onclick="rev('prac2')">Reveal solution ▸</button>
+  <div class="reveal" id="prac2"><div class="card prob">In the unit square, \(x+y<0.6\) is a right triangle with legs \(0.6,0.6\). Area \(=\tfrac12(0.6)(0.6)=0.18\). Square area \(=1\). So \(P=\) <span class="answer">0.18 = 9/50</span>.</div></div>
+</div>
+
+<div class="card">
+  <h3 style="color:var(--accent2);">Type C — Random point in a shape (area ratio)</h3>
+  <p style="color:var(--text);"><b>Q3.</b> A point is chosen uniformly inside a \(3\times2\) rectangle. Find \(P(\text{distance to the rectangle center}<1)\).</p>
+  <button class="btn ghost" onclick="rev('prac3')">Reveal solution ▸</button>
+  <div class="reveal" id="prac3"><div class="card prob">Favorable region is a full disk of radius 1 centered in the rectangle. Since half-width is 1.5 and half-height is 1, the disk fits entirely. Favorable area \(=\pi\). Total area \(=6\). Thus \(P=\dfrac{\pi}{6}\approx\) <span class="answer">0.524</span>.</div></div>
+</div>
+
+<div class="card">
+  <h3 style="color:var(--accent2);">Type D — Random points on a circle; acute condition via arcs</h3>
+  <p style="color:var(--text);"><b>Q4.</b> Three points are chosen on a circle. What is \(P(\text{triangle is not acute})\)?</p>
+  <button class="btn ghost" onclick="rev('prac4')">Reveal solution ▸</button>
+  <div class="reveal" id="prac4"><div class="card prob">From Example 2.2, \(P(\text{acute})=\tfrac14\). Therefore \(P(\text{not acute})=1-\tfrac14=\) <span class="answer">3/4</span>. (Right angle has probability 0 in the continuous model.)</div></div>
+</div>
+
+<div class="card">
+  <h3 style="color:var(--accent2);">Type E — Two points on outer circle; chord condition by angle</h3>
+  <p style="color:var(--text);"><b>Q5.</b> Concentric circles with radii 1 and 3. Two random points are chosen on the outer circle. Find \(P(\text{their chord intersects the inner circle})\).</p>
+  <button class="btn ghost" onclick="rev('prac5')">Reveal solution ▸</button>
+  <div class="reveal" id="prac5"><div class="card prob">Fix one point. If gap angle is \(\varphi\), distance from center to chord is \(3\cos(\varphi/2)\). Need \(3\cos(\varphi/2)<1\Rightarrow \cos(\varphi/2)<\tfrac13\). So \(\varphi/2\in(\arccos(1/3),\pi-\arccos(1/3))\), giving good angle length \(2\pi-4\arccos(1/3)\). Probability:
+  \[P=\frac{2\pi-4\arccos(1/3)}{2\pi}=1-\frac{2\arccos(1/3)}{\pi}\approx\text{<span class="answer">0.392</span>}\]</div></div>
+</div>
+
+<div class="card">
+  <h3 style="color:var(--accent2);">Type F — Min/Max of independent uniforms</h3>
+  <p style="color:var(--text);"><b>Q6.</b> Two numbers are chosen uniformly from \([0,5]\). Find \(P(\max<3\ \text{or}\ \min>4)\).</p>
+  <button class="btn ghost" onclick="rev('prac6')">Reveal solution ▸</button>
+  <div class="reveal" id="prac6"><div class="card prob">\(\max<3\) means both numbers are in \([0,3]\): probability \((3/5)^2=9/25\). \(\min>4\) means both in \((4,5]\): probability \((1/5)^2=1/25\). The two events are disjoint, so total \(=9/25+1/25=\) <span class="answer">2/5</span>.</div></div>
+</div>
+
+<div class="card">
+  <h3 style="color:var(--accent2);">Type G — Complement by removing disks/sectors</h3>
+  <p style="color:var(--text);"><b>Q7.</b> A point is chosen uniformly in a circle of radius 3. Find \(P(\text{distance from center}>2)\).</p>
+  <button class="btn ghost" onclick="rev('prac7')">Reveal solution ▸</button>
+  <div class="reveal" id="prac7"><div class="card prob">Use complement: outside radius 2 but inside radius 3 is an annulus. Favorable area \(=\pi(3^2)-\pi(2^2)=5\pi\). Total area \(=9\pi\). So \(P=\dfrac{5\pi}{9\pi}=\) <span class="answer">5/9</span>.</div></div>
+</div>
+
+<div class="card amber">
+  <b style="color:#fff">Tip:</b> If students get stuck, ask first: <b>"How many independent random quantities are there?"</b> That one question usually picks the right model (length vs area) immediately.
 </div>
 
 <!-- ════════ CHEAT SHEET ════════ -->
