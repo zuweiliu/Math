@@ -1,0 +1,687 @@
+===== page 01 =====
+; SS 2 EE SS Sa Se A  —————————ee
+| © Preview: Basic Ways of Factorization
+] '
+Factoring is converting a polynomial into a product of two or more simpler
+polynomials.
+i]
+|
+; There are several methods for factorizing polynomials, including: ?
+1. Factoring by GCF
+2. Factoring by Special Patterns such as
+2a. Difference of Two Squares Pattern:
+: a —b? = (a+b)(a-b)
+) 2b. Perfect Square Trinomial Pattern:
+a + 2ab+b? = (a+b)?
+a’ —2ab+b* = (a-b)?
+2c. Sum of Two Cubes Pattern:
+; a? +b® = (a+b)(a* —ab+b’)
+2d. Difference of Two Cubes Pattern:
+a@—b = (a—-b)(a +ab+b’)
+; 2e. Cube of a Binomial Pattern
+: a? + 3a’b + 3ab* + b® = (a+b)?
+a? — 3a"b + 3ab* — b® = (a—b)*
+3. Factoring by Cross Method |
+x +bx+c= (x+p)(x+q) |
+) x Pp |
+| ><
+! x q
+| |
+I I
+!
+! ar + bx +c = (mx +p)(nx+q) !
+mx Dp
+| | |
+\ nx q I
+!
+| |
+I i}
+| !
+I |
+! I
+| |
+| !
+i] |
+ill
+Wa. _~o- eee eee er as
+2026 Spring AMC 10 AIME Camp Lesson 1-8
+
+===== page 02 =====
+© Section 1 Advanced Ways of Factorizations
+©) Concept 1: Factoring by Grouping
+Grouping method is used to factorize polynomials that cannot be directly factored
+using the common factor method or formulas. Polynomials that can be factored by
+grouping typically have four or more terms. Generally, there are two common forms
+of grouping: two-two grouping and three-one grouping.
+Math Exploration 7 |
+@ It is known that a? + 2b? + 2c” - 2ab - 2be - 6c + 9 = 0. What is the product of a, b
+and c?
+A. -27 B. -18 C.0 D. 18 E27
+® Real numbers x and y satisfy the equation x* + y? = 10x — 6y — 34. What is x + y?
+(2013 AMC 10B Problems, Question #11)
+A. 1 B.2 C.3 D. 6 E.8
+copyrighted by Mathematics Association of America, American Mathematics Competitions,
+2026 Spring AMC 10 AIME Camp Lesson 1-8
+
+===== page 03 =====
+i \
+| © Which of the following is the factor of the polynomial: 3"*? — 2"*3 4 3" — 2"+!9
+A.3 B. 6 C. 8 D. 10 E. 12
+|
+I
+I
+|
+]
+! !
+|
+|
+I ;
+|
+|
+l
+I
+|
+|
+i
+!
+l
+1
+! |
+|
+1 |
+|
+' @ Which of the following expression is the factor of x” + 8y — 4x — 4xy + 4?
+A.x-4 B.x+2 C.x-4y-2 D. x -4y |
+1 \
+Y i
+1 |
+! |
+I
+|
+|
+|
+!
+! !
+!
+' '
+|
+|
+! |
+|
+|
+I |
+|
+I
+|
+|
+|
+|
+I
+I
+2026 Spring AMC 10 AIME Camp Lesson 1-8
+
+===== page 04 =====
+\
+
+© Concept 2: Factoring by Splitting and Adding Terms (Completing ;
+
+Squares) !
+
+|
+
+Splitting terms: Convert a certain term into the sum of several terms.
+
+Example: 3a? = a? +2a*
+
+|
+
+Adding terms: Add several terms into the expressions without changing the value of ;
+
+the expressions. ;
+
+Example: a* +1 =a’ +2a-2a+1 ;
+
+i |
+
+i]
+
+Both splitting and adding terms will not change the value of the expression. When
+
+the expression cannot be factored directly, we can apply these method to allow us to
+
+factor by finding common factors, or by the formulae method. If we can make
+
+connections between some terms in the original expression, we can also use the
+
+grouping method to factor.
+
+| 1
+
+Completing the square: We may add terms to expressions to make up important
+
+missing parts of the original polynomial to construct a perfect square in some part of ;
+
+the new polynomial. |
+
+J
+
+After completing the square, the difference between two squares is usually used to 1
+
+factor the polynomial.
+
+i |
+
+1
+
+Method: We usually make up the middle term 2ab, or one of the square term b* (or ;
+
+a’). The way of completing the square depends on your observation of the problem.
+
+After that, we manipulate the polynomial to the square of difference form A? — B?,
+
+; and factor it into the form of (A — B)(A + B).
+
+|
+
+i]
+
+[4 Math Exploration 2 | !
+
+a ;
+
+I
+
+1 @ Factorize a’ - 4a +3.
+
+!
+
+]
+
+! !
+
+]
+
+I I
+
+\ I
+
+i I
+
+| I
+
+l
+
+| |
+
+| i]
+
+i |
+
+! |
+
+|
+
+( |
+
+I I
+2026 Spring AMC 10 AIME Camp Lesson 1-8
+
+===== page 05 =====
+t _
+
+| © Which of the following is the factor of the polynomial: x? — 9x + 8? --
+
+A.x+] B.x-1 C.x241 D.x3 +1 i
+
+l I
+
+' iz
+
+I I
+
+| I
+
+I !
+
+| ‘
+
+| |
+
+l
+
+| |
+
+| !
+
+| i
+
+| !
+
+|
+
+1 i
+
+|
+
+i]
+
+i] f
+
+i]
+
+' i
+
+i]
+
+|
+
+| I
+
+1
+
+| |
+
+i}
+
+I |
+
+I 1
+
+| ! &
+
+| € Complete the square to factorize - add and subtract terms: 1
+
+| | oe
+
+(1) x4 +4 (2) x8 +2441 ia
+
+if 1 2
+
+| I
+
+| ]
+
+| 1
+
+1
+
+| i
+
+! !
+
+! !
+
+! !
+
+! 1
+
+! I
+
+! 1
+
+! !
+
+! !
+
+! !
+
+! \
+
+; \
+
+! 1
+
+! 1
+
+! tf
+
+! |
+
+y i
+
+: 1
+
+! i
+
+' I
+
+; !
+
+: i}
+
+)
+
+|
+
+: 1
+
+! 'k
+2026 Spring AMC 10 AIME Camp Lesson 1-8
+
+===== page 06 =====
+‘3 re *,
+cot ©) Concept 3: Simon's Favorite Factoring Trick
+1 ]
+Ss . 1 Simon's Favorite Factoring Trick is a technique often used to factor expressions
+gos where completing the square or other typical methods are less intuitive. It is
+= especially useful for factoring certain types of equations that involve two variables, ;
+ss particularly those that look like this:
+ico xy + ax + by + ab
+| | The goal is to rewrite the expression so that it can be factored as the product of two |
+=o binomials.
+<a !
+\ =I ‘ _ |
+‘os General Formula: xy + ax + by + ab = (x + b)(y +a). !
+i " \
+iia am Math Exploration 3 |
+
+\
+=} 7) Given that x, y are positive integers and xy — 2x — 3y = 6, find the sum of all the
+| eee possible values of x.
+<a, ;
+: =) (
+== 5 |
+1 |
+I
+
+i]
+=" |
+it :
+
+| i}
+=|
+| = I Il
+! =e @ Given that x, y are positive integers and 6xy — 10x - 21y = 49, find all possible solution ;
+= pairs (x,y).
+i" f
+! a i] I
+ea !
+i |
+| va i] I
+ha
+i \ I
+i
+a" ,
+le
+
+| ee
+; ag " |
+
+===== page 07 =====
+i \
+
+© Consider the set of all fractions * where x and y are relatively prime positive integers. _,
+
+\ y
+
+How many of these fractions have the property that if both numerator and
+
+1 denominator are increased by 1, the value of the fraction is increased by 10%? (2015
+
+AMC 10A Problems, Queston #15) '
+
+A. 0 B. 1 C.2 D.3
+
+E. infinitely many
+
+I I
+
+|
+
+i] i
+
+I !
+
+I
+
+I i
+
+I
+
+|
+
+i '
+
+1 1
+
+it i
+
+|
+
+|
+
+|
+
+|
+
+|
+
+|
+
+|
+
+|
+
+|
+
+i} }
+
+|
+
+I i
+
+I 1
+
+i] 1 &
+
+| i]
+
+1 |
+
+! l
+
+| te,
+
+| \
+
+| 1
+
+| |
+
+! \
+
+| I
+
+! l
+
+| !
+
+| 1
+
+| 1
+
+| ’
+
+|
+
+| \
+
+| \
+
+’ \
+
+! |
+
+:
+
+| 1
+
+i
+
+| i
+
+! .
+
+I i
+
+J 1
+
+1 ’
+
+i]
+
+| 1
+
+|
+
+|
+
+! \
+
+copyrighted by Mathematics Association of America, American Mathematics Competitions. I
+|
+
+ea ‘
+
+2026 Spring AMC 10 AIME Camp Lesson 1-8
+
+===== page 08 =====
+, \
+
+© Concept 4: Find the Extreme Value by Completing Squares
+
+|
+
+Because of the non-negativity of perfect squares that x* > 0, we can find the ;
+
+minimum value of the polynomials by completing the squares.
+
+I
+
+aan Math Exploration 4 | ;
+
+1
+
+@ If x and y are real numbers, what is the least value of 2x” — 4xy + 4y* + 8y + 11?
+
+A. 1 B. 3 C.5 D.7 E.9 ;
+
+;
+
+|
+
+1
+
+1
+
+;
+
+1
+
+I
+
+i
+
+|
+
+|
+
+|
+
+|
+
+]
+
+@ What is the least possible value of
+
+(x + 1) (x + 2)(x + 3)(x +4) +2019
+
+where x is a real number? (2019 AMC 10A Problems, Question #19) ;
+
+A. 2017 B. 2018 C. 2019 D. 2020 E. 2021
+
+i |
+
+1
+
+i}
+
+| i
+
+I
+
+|
+
+|
+
+|
+
+|
+
+|
+
+|
+
+1
+
+i |
+
+1
+
+F |
+
+i}
+
+|
+
+]
+
+]
+
+i copyrighted by Mathematics Association of America, American Mathematics Competitions.
+2026 Spring AMC 10 AIME Camp Lesson 1-8
+
+===== page 09 =====
+@ 1° -2°4+3°-445°-67 +... 4977 — 987 +997 - 100? |
+14+24+34+44+5+6+-+-+97+4+98 +99 + 100 -
+A. —5050 B. -1 C.0 D. 1 E. 5050
+. _ 2021 2020 p wg:
+The expression —— — —— j ion — i i t
+® p 2020 ~ 2031 is equal to the fraction 7 in which p and gq are positive
+integers whose greatest common divisor is 1. What is p? (2021 AMC 10B Problems,
+Question #3)
+A. 1 B.9 C. 2020 D. 2021 E. 4041
+@ Given that x2 + x + 1 = 0. The value of x? + 2x” + 2x + 2018 is ,
+copyrighted by Mathematics Association of America, American Mathematics Competitions.
+
+===== page 10 =====
+@ How many ordered pairs of integers (x, y) satisfy the equation x70 + y* = 2y? (2020
+
+AMC 10B Problems, Question #9)
+A. 1 B. 2 C.3 D.4
+E. infinitely many
+
+@ Given that x, y are positive integers and xy — 4x — 5y = 14, the sum of possible values
+ofxis_
+
+@ |fa+b=6 anda’ +}? = 72, then the value of a” +b? is .
+
+copyrighted by Mathematics Association of America, American Mathematics Competitions.
+
+===== page 11 =====
+@ For how many integers x is the number x* — 51x” + 50 negative? (2014 AMC 10B
+Problems, Question #20)
+A. 8 B. 10 C, 12 D. 14 E. 16
+
+€ |n an isosceles triangle, the two side lengths a and b satisfy the conditions:
+9a* — b* = -13 and 3a + b = 13. What is the length of the third side of the triangle?
+A. 2 B.7 C.2or5 D. 2 or7 E.5o0r7
+copyrighted by Mathematics Association of America, American Mathematics Competitions.
+
+===== page 12 =====
+© Which of the following is the factor of the expression:
+
+(x* — x? — 40) (x* - x? - 44) - 896?
+
+A.x+4 B.x+6 C. x? D.x-3 E.x7 +9
+(*D lfat+bt+c=6a7 +b +c =l4anda+b +c =36,a'+hb+ +1 =
