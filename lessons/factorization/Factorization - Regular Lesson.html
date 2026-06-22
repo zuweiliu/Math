@@ -75,6 +75,14 @@ body.apothecary-bg::before{
   <h3 class="ex">Example 1 (from PDF style): solve for \(abc\)</h3>
   <div class="card amber"><p style="color:var(--text);margin:0;">Given \(a^2+2b^2+2c^2-2ab-2bc-6c+9=0\), find \(abc\).</p></div>
   <div class="card">
+    <button class="btn ghost" onclick="rev('c1e1think')">How to think about this ▸</button>
+    <div class="reveal" id="c1e1think">
+      <div class="method">
+        <div class="h">Strategy: Recognize a sum of squares</div>
+        Look for patterns of the form \(A^2+B^2+C^2\). Group terms that form perfect squares:
+        \(a^2-2ab+b^2\), \(b^2-2bc+c^2\), and a leftover \(c^2\) part. If sum equals 0, each square must be 0 since squares are never negative.
+      </div>
+    </div>
     <button class="btn ghost" onclick="rev('c1e1')">Show step-by-step ▸</button>
     <div class="reveal" id="c1e1">
       <div class="steps">
@@ -83,15 +91,18 @@ body.apothecary-bg::before{
         <div class="stepline"><div class="n"></div><div class="b">Hence \(a=b=c=3\), so <span class="answer">\(abc=27\)</span>.</div></div>
       </div>
     </div>
-    <div class="method">
-      <div class="h">TYPE - 3-1 grouping into perfect squares</div>
-      <b>METHOD:</b> Build a sum of squares. If it equals 0, every square term must be 0.
-    </div>
   </div>
 
   <h3 class="ex">Example 2 (from PDF style): complete squares in two variables</h3>
   <div class="card amber"><p style="color:var(--text);margin:0;">Real numbers \(x,y\) satisfy \(x^2+y^2=10x-6y-34\). Find \(x+y\).</p></div>
   <div class="card">
+    <button class="btn ghost" onclick="rev('c1e2think')">How to think about this ▸</button>
+    <div class="reveal" id="c1e2think">
+      <div class="method">
+        <div class="h">Strategy: Move to one side, then complete all squares</div>
+        When you have \(x^2+y^2=\text{(linear in }x,y\text{)}\"), move everything to one side to get \(x^2+y^2-\text{(linear)}=0\). Then complete the square separately for \(x\) and \(y\). If sum of two squares equals 0, both must be 0.
+      </div>
+    </div>
     <button class="btn ghost" onclick="rev('c1e2')">Show step-by-step ▸</button>
     <div class="reveal" id="c1e2">
       <div class="steps">
@@ -110,6 +121,13 @@ body.apothecary-bg::before{
   <h3 class="ex">Example 3 (Math Exploration): factor \(a^2-4a+3\)</h3>
   <div class="card amber"><p style="color:var(--text);margin:0;">Factorize \(a^2-4a+3\).</p></div>
   <div class="card">
+    <button class="btn ghost" onclick="rev('c2e1think')">How to think about this ▸</button>
+    <div class="reveal" id="c2e1think">
+      <div class="method">
+        <div class="h">Strategy: Sum-product on a quadratic</div>
+        For \(a^2+ba+c\), find two numbers that multiply to \(c\) and add to \(b\). Then \(a^2+ba+c=(a+n_1)(a+n_2)\).
+      </div>
+    </div>
     <button class="btn ghost" onclick="rev('c2e1')">Show step-by-step ▸</button>
     <div class="reveal" id="c2e1">
       <div class="steps">
@@ -122,12 +140,15 @@ body.apothecary-bg::before{
   <h3 class="ex">Example 4 (PDF): complete square to factor \(x^4+4\)</h3>
   <div class="card amber"><p style="color:var(--text);margin:0;">Factorize \(x^4+4\) by adding and subtracting terms.</p></div>
   <div class="card">
-    <div class="method">
-      <div class="h">How to decide the added term</div>
-      <b>Goal:</b> force a difference of squares: \((x^2+m)^2-(nx)^2\).<br>
-      Expand: \((x^2+m)^2-(nx)^2=x^4+(2m-n^2)x^2+m^2\).<br>
-      Match with \(x^4+4\): we need \(m^2=4\Rightarrow m=2\), and no \(x^2\)-term so \(2m-n^2=0\Rightarrow n^2=4\Rightarrow n=2\).<br>
-      So we must create \((x^2+2)^2-(2x)^2\), which means adding and subtracting <b>\(4x^2\)</b>.
+    <button class="btn ghost" onclick="rev('c2e2think')">How to think about this ▸</button>
+    <div class="reveal" id="c2e2think">
+      <div class="method">
+        <div class="h">Strategy: Force a difference of squares</div>
+        Goal: write \(x^4+4\) as \((x^2+m)^2-(nx)^2\). Expand to find what \(m\) and \(n\) must be:
+        \[(x^2+m)^2-(nx)^2=x^4+(2m-n^2)x^2+m^2.\]
+        Match coefficients: \(m^2=4\Rightarrow m=2\), and \(2m-n^2=0\Rightarrow n^2=4\Rightarrow n=2\).
+        So target form is \((x^2+2)^2-(2x)^2\), which requires adding and subtracting \(4x^2\).
+      </div>
     </div>
     <button class="btn ghost" onclick="rev('c2e2')">Show step-by-step ▸</button>
     <div class="reveal" id="c2e2">
@@ -148,6 +169,13 @@ body.apothecary-bg::before{
   <h3 class="ex">Example 5 (Math Exploration): sum of possible \(x\)</h3>
   <div class="card amber"><p style="color:var(--text);margin:0;">Given positive integers \(x,y\) and \(xy-2x-3y=6\), find the sum of all possible values of \(x\).</p></div>
   <div class="card">
+    <button class="btn ghost" onclick="rev('c3e1think')">How to think about this ▸</button>
+    <div class="reveal" id="c3e1think">
+      <div class="method">
+        <div class="h">Strategy: Simon's Favorite Factoring Trick</div>
+        For \(xy+ax+by=c\), add the constant \(ab\) to both sides to get \((x+b)(y+a)=c+ab\). Then list all divisor pairs of the right side and check which give positive integers.
+      </div>
+    </div>
     <button class="btn ghost" onclick="rev('c3e1')">Show step-by-step ▸</button>
     <div class="reveal" id="c3e1">
       <div class="steps">
@@ -161,6 +189,13 @@ body.apothecary-bg::before{
   <h3 class="ex">Example 6 (Math Exploration): all integer pairs</h3>
   <div class="card amber"><p style="color:var(--text);margin:0;">Given positive integers \(x,y\), solve \(6xy-10x-21y=49\).</p></div>
   <div class="card">
+    <button class="btn ghost" onclick="rev('c3e2think')">How to think about this ▸</button>
+    <div class="reveal" id="c3e2think">
+      <div class="method">
+        <div class="h">Strategy: SFFT with coefficients</div>
+        Factor out leading coefficients from each pair: \(6xy-10x-21y = 2x(3y-5)-7(3y-5)\) doesn't work directly. Instead, find the constant \(ab\) such that \(6xy-10x-21y+ab\) factors as \((2x+a)(3y+b)\). Then solve the factored equation.
+      </div>
+    </div>
     <button class="btn ghost" onclick="rev('c3e2')">Show step-by-step ▸</button>
     <div class="reveal" id="c3e2">
       <div class="steps">
@@ -179,6 +214,13 @@ body.apothecary-bg::before{
   <h3 class="ex">Example 7 (Math Exploration): two-variable minimum</h3>
   <div class="card amber"><p style="color:var(--text);margin:0;">Find the least value of \(2x^2-4xy+4y^2+8y+11\).</p></div>
   <div class="card">
+    <button class="btn ghost" onclick="rev('c4e1think')">How to think about this ▸</button>
+    <div class="reveal" id="c4e1think">
+      <div class="method">
+        <div class="h">Strategy: Complete squares one variable at a time</div>
+        Group all \(x\) terms together (they may mix with \(y\)) and factor as a multiple of \((x+\text{something})^2\). Then complete the square in \(y\) separately. The minimum is the constant left over (since squares are \(\ge 0\)).
+      </div>
+    </div>
     <button class="btn ghost" onclick="rev('c4e1')">Show step-by-step ▸</button>
     <div class="reveal" id="c4e1">
       <div class="steps">
@@ -192,6 +234,13 @@ body.apothecary-bg::before{
   <h3 class="ex">Example 8 (AMC 10A 2019 #19): product shift trick</h3>
   <div class="card amber"><p style="color:var(--text);margin:0;">Find the least value of \((x+1)(x+2)(x+3)(x+4)+2019\), where \(x\in\mathbb{R}\).</p></div>
   <div class="card">
+    <button class="btn ghost" onclick="rev('c4e2think')">How to think about this ▸</button>
+    <div class="reveal" id="c4e2think">
+      <div class="method">
+        <div class="h">Strategy: Pair factors smartly to create a repeat</div>
+        When you see four consecutive linear terms, pair outer with inner: \((x+1)(x+4)\) and \((x+2)(x+3)\). These expand to \(x^2+5x+4\) and \(x^2+5x+6\)—notice they share \(x^2+5x\)! Use substitution \(t=x^2+5x\) to get a quadratic in \(t\), then complete the square.
+      </div>
+    </div>
     <button class="btn ghost" onclick="rev('c4e2')">Show step-by-step ▸</button>
     <div class="reveal" id="c4e2">
       <div class="steps">
@@ -224,6 +273,10 @@ body.apothecary-bg::before{
   <div class="hw">
     <span class="hwnum">H1</span><span class="pill">Grouping / factor check</span>
     <p style="color:var(--text);">Which number is always a factor of \(3^{n+2}-2^{n+3}+3^n-2^{n+1}\)?</p>
+    <button class="btn ghost" onclick="rev('h1think')">How to think about this ▸</button>
+    <div class="reveal" id="h1think">
+      <div class="method"><div class="h">Strategy: Group by base</div>Group terms with \(3^n\) together and \(2^{n}\) together, then factor out the base powers.</div>
+    </div>
     <button class="btn ghost" onclick="rev('h1')">Reveal ▸</button>
     <div class="reveal" id="h1"><div class="card prob">\(=10\cdot(3^n-2^{n+1})\), so the factor is <span class="answer">10</span>.</div></div>
   </div>
@@ -231,6 +284,10 @@ body.apothecary-bg::before{
   <div class="hw">
     <span class="hwnum">H2</span><span class="pill">Split middle term</span>
     <p style="color:var(--text);">Which factor must divide \(x^2-9x+8\)?</p>
+    <button class="btn ghost" onclick="rev('h2think')">How to think about this ▸</button>
+    <div class="reveal" id="h2think">
+      <div class="method"><div class="h">Strategy: Sum-product on quadratic</div>Find two numbers with product \(8\) and sum \(-9\).</div>
+    </div>
     <button class="btn ghost" onclick="rev('h2')">Reveal ▸</button>
     <div class="reveal" id="h2"><div class="card prob">\(x^2-9x+8=(x-1)(x-8)\), so one factor is <span class="answer">\(x-1\)</span>.</div></div>
   </div>
@@ -238,6 +295,10 @@ body.apothecary-bg::before{
   <div class="hw">
     <span class="hwnum">H3</span><span class="pill">SFFT</span>
     <p style="color:var(--text);">How many reduced positive fractions \(\frac{x}{y}\) satisfy that \(\frac{x+1}{y+1}\) is 10% larger than \(\frac{x}{y}\)?</p>
+    <button class="btn ghost" onclick="rev('h3think')">How to think about this ▸</button>
+    <div class="reveal" id="h3think">
+      <div class="method"><div class="h">Strategy: Convert percentage to equation</div>"10% larger" means \(\frac{x+1}{y+1}=1.1\cdot\frac{x}{y}\). Clear denominators to get a linear relationship in \(x,y\), then find integer solutions.</div>
+    </div>
     <button class="btn ghost" onclick="rev('h3')">Reveal ▸</button>
     <div class="reveal" id="h3"><div class="card prob">Equation gives \(10y(x+1)=11x(y+1)\Rightarrow y=\frac{11x}{10-x}\). Reduced positive solution is only \((x,y)=(5,11)\), so count <span class="answer">1</span>.</div></div>
   </div>
@@ -245,6 +306,10 @@ body.apothecary-bg::before{
   <div class="hw">
     <span class="hwnum">H4</span><span class="pill">Extreme value</span>
     <p style="color:var(--text);">Evaluate \(\dfrac{1^2-2^2+3^2-4^2+\cdots+99^2-100^2}{1+2+\cdots+100}\).</p>
+    <button class="btn ghost" onclick="rev('h4think')">How to think about this ▸</button>
+    <div class="reveal" id="h4think">
+      <div class="method"><div class="h">Strategy: Pair consecutive squares</div>Notice the alternating pattern. Pair adjacent terms: \((1^2-2^2)+(3^2-4^2)+\cdots\), each a difference of squares. Use \(a^2-b^2=(a-b)(a+b)\).</div>
+    </div>
     <button class="btn ghost" onclick="rev('h4')">Reveal ▸</button>
     <div class="reveal" id="h4"><div class="card prob">Numerator pairs to \(\sum_{k=1}^{50}((2k-1)^2-(2k)^2)=\sum_{k=1}^{50}(1-4k)=-5050\). Denominator is \(5050\). Value <span class="answer">-1</span>.</div></div>
   </div>
@@ -252,6 +317,10 @@ body.apothecary-bg::before{
   <div class="hw">
     <span class="hwnum">H5</span><span class="pill">Completing square</span>
     <p style="color:var(--text);">Given \(x^2+x+1=0\), find \(x^3+2x^2+2x+2018\).</p>
+    <button class="btn ghost" onclick="rev('h5think')">How to think about this ▸</button>
+    <div class="reveal" id="h5think">
+      <div class="method"><div class="h">Strategy: Use the constraint to simplify</div>From \(x^2+x+1=0\), you immediately know \(x^2+x=-1\). Replace all \(x^2+x\) pairs in the expression. For any remaining \(x^3\), use the factorization \((x^2+x+1)(x-1)=x^3-1\) to find \(x^3\).</div>
+    </div>
     <button class="btn ghost" onclick="rev('h5')">Reveal ▸</button>
     <div class="reveal" id="h5"><div class="card prob">From \(x^2+x=-1\), expression \(=x^3+2(-1)+2018=x^3+2016\). Also \((x^2+x+1)(x-1)=x^3-1\Rightarrow x^3=1\). So <span class="answer">2017</span>.</div></div>
   </div>
@@ -259,6 +328,10 @@ body.apothecary-bg::before{
   <div class="hw">
     <span class="hwnum">H6</span><span class="pill">Squares</span>
     <p style="color:var(--text);">How many integer pairs \((x,y)\) satisfy \(x^{70}+y^2=2y\)?</p>
+    <button class="btn ghost" onclick="rev('h6think')">How to think about this ▸</button>
+    <div class="reveal" id="h6think">
+      <div class="method"><div class="h">Strategy: Complete the square in \(y\)</div>Rearrange to \(x^{70}+y^2-2y=0\). Complete the square: \(x^{70}+(y-1)^2=1\). Now \(x^{70}\) and \((y-1)^2\) are both nonnegative integers summing to 1, so list all cases.</div>
+    </div>
     <button class="btn ghost" onclick="rev('h6')">Reveal ▸</button>
     <div class="reveal" id="h6"><div class="card prob">\(x^{70}+(y-1)^2=1\). Cases: \(x^{70}=0\Rightarrow x=0,y=0\) or \(2\); \(x^{70}=1\Rightarrow x=\pm1,y=1\). Total <span class="answer">4</span> pairs.</div></div>
   </div>
@@ -266,6 +339,10 @@ body.apothecary-bg::before{
   <div class="hw">
     <span class="hwnum">H7</span><span class="pill">SFFT</span>
     <p style="color:var(--text);">Positive integers satisfy \(xy-4x-5y=14\). Find the sum of all possible \(x\).</p>
+    <button class="btn ghost" onclick="rev('h7think')">How to think about this ▸</button>
+    <div class="reveal" id="h7think">
+      <div class="method"><div class="h">Strategy: Simon's Favorite Factoring Trick</div>For \(xy-4x-5y=\text{const}\), add \((-4)(-5)=20\) to both sides to get \((x-5)(y-4)=14+20=34\). Then list divisor pairs of 34.</div>
+    </div>
     <button class="btn ghost" onclick="rev('h7')">Reveal ▸</button>
     <div class="reveal" id="h7"><div class="card prob">\((x-5)(y-4)=34\). Positive divisors of \(34\): \(1,2,17,34\), so \(x=6,7,22,39\). Sum <span class="answer">74</span>.</div></div>
   </div>
@@ -273,6 +350,10 @@ body.apothecary-bg::before{
   <div class="hw">
     <span class="hwnum">H8</span><span class="pill">Quadratic in \(x^2\)</span>
     <p style="color:var(--text);">For how many integers \(x\) is \(x^4-51x^2+50<0\)?</p>
+    <button class="btn ghost" onclick="rev('h8think')">How to think about this ▸</button>
+    <div class="reveal" id="h8think">
+      <div class="method"><div class="h">Strategy: Substitute \(t=x^2\), solve in \(t\), then map back</div>Recognize this as a quadratic in \(x^2\). Let \(t=x^2\), solve \((t-1)(t-50)<0\) to get the range of \(t\). Then find all integers \(x\) whose square falls in that range.</div>
+    </div>
     <button class="btn ghost" onclick="rev('h8')">Reveal ▸</button>
     <div class="reveal" id="h8"><div class="card prob">Let \(t=x^2\). Then \((t-1)(t-50)<0\Rightarrow 1&lt;t&lt;50\). Square values: \(4,9,16,25,36,49\), giving \(x=\pm2,\pm3,\pm4,\pm5,\pm6,\pm7\): <span class="answer">12</span> integers.</div></div>
   </div>
@@ -280,6 +361,10 @@ body.apothecary-bg::before{
   <div class="hw">
     <span class="hwnum">H9</span><span class="pill">System + geometry</span>
     <p style="color:var(--text);">In an isosceles triangle, side lengths \(a,b\) satisfy \(9a^2-b^2=-13\), \(3a+b=13\). Find the third side.</p>
+    <button class="btn ghost" onclick="rev('h9think')">How to think about this ▸</button>
+    <div class="reveal" id="h9think">
+      <div class="method"><div class="h">Strategy: Substitute to eliminate a variable</div>Use the linear equation \(3a+b=13\) to express \(b\) in terms of \(a\). Substitute into the quadratic to solve for \(a\), then check triangle inequality and isosceles constraint.</div>
+    </div>
     <button class="btn ghost" onclick="rev('h9')">Reveal ▸</button>
     <div class="reveal" id="h9"><div class="card prob">From \(b=13-3a\): \(9a^2-(13-3a)^2=-13\Rightarrow a=2,b=7\). Isosceles side sets are \((7,7,2)\) or \((2,2,7)\); only first is valid. Third side is <span class="answer">7</span>.</div></div>
   </div>
