@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Factorization - Regular Lesson (AMC 10 AIME Camp Lesson 1-8)</title>
+<link rel="stylesheet" href="../../common/lesson.css">
+<script src="../../common/lesson.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+/* Apothecary-inspired atmosphere without copyrighted character images */
+body.apothecary-bg{
+  background:
+    radial-gradient(900px 520px at 12% -8%, rgba(125, 211, 252, 0.14), transparent 58%),
+    radial-gradient(900px 520px at 92% 112%, rgba(110, 231, 183, 0.12), transparent 58%),
+    linear-gradient(160deg, #04110f 0%, #0a1a17 35%, #0f201b 65%, #10231d 100%);
+}
+body.apothecary-bg::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  opacity:.2;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(134,239,172,.14) 0, rgba(134,239,172,.14) 1px, transparent 1px, transparent 12px),
+    repeating-linear-gradient(-45deg, rgba(186,230,253,.08) 0, rgba(186,230,253,.08) 1px, transparent 1px, transparent 18px);
+}
+.wrap{position:relative;z-index:1;}
+.hero .tag{background:rgba(110,231,183,.15);border-color:#34d399;color:#6ee7b7}
+.note{font-size:.9rem;color:var(--muted)}
+</style>
+</head>
+<body class="apothecary-bg">
+<canvas id="stars"></canvas>
+
+<div id="topbar">
+  <div class="logo">Factorization · Regular Lesson</div>
+  <nav>
+    <a href="#basics">Basics</a>
+    <a href="#c1">Concept 1 · Grouping</a>
+    <a href="#c2">Concept 2 · Splitting</a>
+    <a href="#c3">Concept 3 · SFFT</a>
+    <a href="#c4">Concept 4 · Extremes</a>
+    <a href="#practice">Homework from PDF</a>
+    <a href="#cheat">Cheat Sheet</a>
+  </nav>
+</div>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="tag">2026 Spring AMC 10 AIME Camp · Lesson 1-8</div>
+    <h1>Factorization</h1>
+    <p>This is the <b>regular lesson</b> aligned to the camp PDF. The worked examples and homework section below follow the original worksheet scope.</p>
+    <p class="note">Visual theme is apothecary-inspired. If you upload a licensed image file locally, I can wire it in as the background.</p>
+  </div>
+
+  <h2 class="sec" id="basics">Basic Ways of Factorization (Quick Review)</h2>
+  <div class="card">
+    <table class="cheat">
+      <tr><th>Tool</th><th>Pattern</th></tr>
+      <tr><td>GCF</td><td>Pull out the greatest common factor first</td></tr>
+      <tr><td>Difference of squares</td><td>\(a^2-b^2=(a+b)(a-b)\)</td></tr>
+      <tr><td>Perfect square trinomial</td><td>\(a^2\pm 2ab+b^2=(a\pm b)^2\)</td></tr>
+      <tr><td>Sum / difference of cubes</td><td>\(a^3\pm b^3=(a\pm b)(a^2\mp ab+b^2)\)</td></tr>
+      <tr><td>Cross method</td><td>\(ax^2+bx+c\to(mx+p)(nx+q)\)</td></tr>
+    </table>
+  </div>
+
+  <h2 class="sec" id="c1">Concept 1 - Factoring by Grouping</h2>
+  <div class="card">
+    <p style="color:var(--text);">Grouping is useful when expressions have four or more terms. Typical forms are <b>2-2 grouping</b> and <b>3-1 grouping</b>.</p>
+  </div>
+
+  <h3 class="ex">Example 1 (from PDF style): solve for \(abc\)</h3>
+  <div class="card amber"><p style="color:var(--text);margin:0;">Given \(a^2+2b^2+2c^2-2ab-2bc-6c+9=0\), find \(abc\).</p></div>
+  <div class="card">
+    <button class="btn ghost" onclick="rev('c1e1')">Show step-by-step ▸</button>
+    <div class="reveal" id="c1e1">
+      <div class="steps">
+        <div class="stepline"><div class="n"></div><div class="b">Regroup into squares: \((a-b)^2+(b-c)^2+(c-3)^2=0\).</div></div>
+        <div class="stepline"><div class="n"></div><div class="b">Each square is nonnegative, so each must be \(0\).</div></div>
+        <div class="stepline"><div class="n"></div><div class="b">Hence \(a=b=c=3\), so <span class="answer">\(abc=27\)</span>.</div></div>
+      </div>
+    </div>
+    <div class="method">
+      <div class="h">TYPE - 3-1 grouping into perfect squares</div>
+      <b>METHOD:</b> Build a sum of squares. If it equals 0, every square term must be 0.
+    </div>
+  </div>
+
+  <h3 class="ex">Example 2 (from PDF style): complete squares in two variables</h3>
+  <div class="card amber"><p style="color:var(--text);margin:0;">Real numbers \(x,y\) satisfy \(x^2+y^2=10x-6y-34\). Find \(x+y\).</p></div>
+  <div class="card">
+    <button class="btn ghost" onclick="rev('c1e2')">Show step-by-step ▸</button>
+    <div class="reveal" id="c1e2">
+      <div class="steps">
+        <div class="stepline"><div class="n"></div><div class="b">Move all terms: \(x^2-10x+y^2+6y+34=0\).</div></div>
+        <div class="stepline"><div class="n"></div><div class="b">Complete squares: \((x-5)^2+(y+3)^2=0\).</div></div>
+        <div class="stepline"><div class="n"></div><div class="b">So \(x=5\), \(y=-3\), and <span class="answer">\(x+y=2\)</span>.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="sec" id="c2">Concept 2 - Splitting &amp; Adding Terms (Completing Squares)</h2>
+  <div class="card">
+    <p style="color:var(--text);"><b style="color:#fff;">Splitting terms:</b> rewrite a term as a sum. <b style="color:#fff;">Adding terms:</b> add and subtract the same expression to create a factorizable pattern.</p>
+  </div>
+
+  <h3 class="ex">Example 3 (Math Exploration): factor \(a^2-4a+3\)</h3>
+  <div class="card amber"><p style="color:var(--text);margin:0;">Factorize \(a^2-4a+3\).</p></div>
+  <div class="card">
+    <button class="btn ghost" onclick="rev('c2e1')">Show step-by-step ▸</button>
+    <div class="reveal" id="c2e1">
+      <div class="steps">
+        <div class="stepline"><div class="n"></div><div class="b">Find two numbers with product \(3\) and sum \(-4\): \(-1,-3\).</div></div>
+        <div class="stepline"><div class="n"></div><div class="b">Therefore <span class="answer">\((a-1)(a-3)\)</span>.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="ex">Example 4 (PDF): complete square to factor \(x^4+4\)</h3>
+  <div class="card amber"><p style="color:var(--text);margin:0;">Factorize \(x^4+4\) by adding and subtracting terms.</p></div>
+  <div class="card">
+    <div class="method">
+      <div class="h">How to decide the added term</div>
+      <b>Goal:</b> force a difference of squares: \((x^2+m)^2-(nx)^2\).<br>
+      Expand: \((x^2+m)^2-(nx)^2=x^4+(2m-n^2)x^2+m^2\).<br>
+      Match with \(x^4+4\): we need \(m^2=4\Rightarrow m=2\), and no \(x^2\)-term so \(2m-n^2=0\Rightarrow n^2=4\Rightarrow n=2\).<br>
+      So we must create \((x^2+2)^2-(2x)^2\), which means adding and subtracting <b>\(4x^2\)</b>.
+    </div>
+    <button class="btn ghost" onclick="rev('c2e2')">Show step-by-step ▸</button>
+    <div class="reveal" id="c2e2">
+      <div class="steps">
+        <div class="stepline"><div class="n"></div><div class="b">Add and subtract \(4x^2\): \(x^4+4x^2+4-4x^2\).</div></div>
+        <div class="stepline"><div class="n"></div><div class="b">Now \((x^2+2)^2-(2x)^2\).</div></div>
+        <div class="stepline"><div class="n"></div><div class="b">Difference of squares gives <span class="answer">\((x^2-2x+2)(x^2+2x+2)\)</span>.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="sec" id="c3">Concept 3 - Simon's Favorite Factoring Trick (SFFT)</h2>
+  <div class="card">
+    <p style="color:var(--text);">For forms like \(xy+ax+by\), add the product term to build two binomials:</p>
+    <div class="formula">\[xy+ax+by+ab=(x+b)(y+a)\]</div>
+  </div>
+
+  <h3 class="ex">Example 5 (Math Exploration): sum of possible \(x\)</h3>
+  <div class="card amber"><p style="color:var(--text);margin:0;">Given positive integers \(x,y\) and \(xy-2x-3y=6\), find the sum of all possible values of \(x\).</p></div>
+  <div class="card">
+    <button class="btn ghost" onclick="rev('c3e1')">Show step-by-step ▸</button>
+    <div class="reveal" id="c3e1">
+      <div class="steps">
+        <div class="stepline"><div class="n"></div><div class="b">Add 6: \((x-3)(y-2)=12\).</div></div>
+        <div class="stepline"><div class="n"></div><div class="b">Positive divisor pairs for 12 give \(x-3\in\{1,2,3,4,6,12\}\).</div></div>
+        <div class="stepline"><div class="n"></div><div class="b">So \(x\in\{4,5,6,7,9,15\}\), sum <span class="answer">\(46\)</span>.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="ex">Example 6 (Math Exploration): all integer pairs</h3>
+  <div class="card amber"><p style="color:var(--text);margin:0;">Given positive integers \(x,y\), solve \(6xy-10x-21y=49\).</p></div>
+  <div class="card">
+    <button class="btn ghost" onclick="rev('c3e2')">Show step-by-step ▸</button>
+    <div class="reveal" id="c3e2">
+      <div class="steps">
+        <div class="stepline"><div class="n"></div><div class="b">Add 35: \((2x-7)(3y-5)=84\).</div></div>
+        <div class="stepline"><div class="n"></div><div class="b">Check odd divisors for \(2x-7\): valid matches are \((2x-7,3y-5)=(3,28),(21,4)\).</div></div>
+        <div class="stepline"><div class="n"></div><div class="b">Hence <span class="answer">\((x,y)=(5,11),(14,3)\)</span>.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="sec" id="c4">Concept 4 - Find Extreme Value by Completing Squares</h2>
+  <div class="card">
+    <p style="color:var(--text);">Because perfect squares are nonnegative, writing an expression as a sum of squares plus a constant gives the minimum value immediately.</p>
+  </div>
+
+  <h3 class="ex">Example 7 (Math Exploration): two-variable minimum</h3>
+  <div class="card amber"><p style="color:var(--text);margin:0;">Find the least value of \(2x^2-4xy+4y^2+8y+11\).</p></div>
+  <div class="card">
+    <button class="btn ghost" onclick="rev('c4e1')">Show step-by-step ▸</button>
+    <div class="reveal" id="c4e1">
+      <div class="steps">
+        <div class="stepline"><div class="n"></div><div class="b">\(2x^2-4xy+4y^2+8y+11=2(x-y)^2+2y^2+8y+11\).</div></div>
+        <div class="stepline"><div class="n"></div><div class="b">\(=2(x-y)^2+2(y+2)^2+3\).</div></div>
+        <div class="stepline"><div class="n"></div><div class="b">Minimum is <span class="answer">\(3\)</span>, reached at \(y=-2, x=-2\).</div></div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="ex">Example 8 (AMC 10A 2019 #19): product shift trick</h3>
+  <div class="card amber"><p style="color:var(--text);margin:0;">Find the least value of \((x+1)(x+2)(x+3)(x+4)+2019\), where \(x\in\mathbb{R}\).</p></div>
+  <div class="card">
+    <button class="btn ghost" onclick="rev('c4e2')">Show step-by-step ▸</button>
+    <div class="reveal" id="c4e2">
+      <div class="steps">
+        <div class="stepline"><div class="n"></div><div class="b">Pair factors: \((x^2+5x+4)(x^2+5x+6)+2019\).</div></div>
+        <div class="stepline"><div class="n"></div><div class="b">Let \(t=x^2+5x\). Then expression is \((t+4)(t+6)+2019=(t+5)^2+2018\).</div></div>
+        <div class="stepline"><div class="n"></div><div class="b">So least value is <span class="answer">\(2018\)</span>.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="sec" id="practice">Homework from the PDF Scope</h2>
+  <p style="color:var(--muted);margin:0 0 8px;">Try these first, then reveal.</p>
+
+  <div class="card">
+    <h3 style="color:var(--accent);margin-bottom:8px;">How to figure out each homework quickly</h3>
+    <table class="cheat">
+      <tr><th>Problem</th><th>First move</th></tr>
+      <tr><td>H1</td><td>Group terms with \(3^n\) and \(2^{n+1}\), then factor out common constants.</td></tr>
+      <tr><td>H2</td><td>Find two numbers with product \(8\), sum \(-9\).</td></tr>
+      <tr><td>H3</td><td>Write “10% larger” as \(\frac{x+1}{y+1}=1.1\cdot\frac{x}{y}\), then clear denominators.</td></tr>
+      <tr><td>H4</td><td>Pair odd-even squares: \((2k-1)^2-(2k)^2\).</td></tr>
+      <tr><td>H5</td><td>Use \(x^2+x=-1\), then get \(x^3\) from \((x^2+x+1)(x-1)=x^3-1\).</td></tr>
+      <tr><td>H6</td><td>Complete square in \(y\): \(y^2-2y=(y-1)^2-1\).</td></tr>
+      <tr><td>H7</td><td>Use SFFT: add 20 to make \((x-5)(y-4)\).</td></tr>
+      <tr><td>H8</td><td>Substitute \(t=x^2\), solve quadratic inequality, return to integer \(x\).</td></tr>
+      <tr><td>H9</td><td>Use the linear equation to substitute, then apply triangle inequality for validity.</td></tr>
+    </table>
+  </div>
+
+  <div class="hw">
+    <span class="hwnum">H1</span><span class="pill">Grouping / factor check</span>
+    <p style="color:var(--text);">Which number is always a factor of \(3^{n+2}-2^{n+3}+3^n-2^{n+1}\)?</p>
+    <button class="btn ghost" onclick="rev('h1')">Reveal ▸</button>
+    <div class="reveal" id="h1"><div class="card prob">\(=10\cdot(3^n-2^{n+1})\), so the factor is <span class="answer">10</span>.</div></div>
+  </div>
+
+  <div class="hw">
+    <span class="hwnum">H2</span><span class="pill">Split middle term</span>
+    <p style="color:var(--text);">Which factor must divide \(x^2-9x+8\)?</p>
+    <button class="btn ghost" onclick="rev('h2')">Reveal ▸</button>
+    <div class="reveal" id="h2"><div class="card prob">\(x^2-9x+8=(x-1)(x-8)\), so one factor is <span class="answer">\(x-1\)</span>.</div></div>
+  </div>
+
+  <div class="hw">
+    <span class="hwnum">H3</span><span class="pill">SFFT</span>
+    <p style="color:var(--text);">How many reduced positive fractions \(\frac{x}{y}\) satisfy that \(\frac{x+1}{y+1}\) is 10% larger than \(\frac{x}{y}\)?</p>
+    <button class="btn ghost" onclick="rev('h3')">Reveal ▸</button>
+    <div class="reveal" id="h3"><div class="card prob">Equation gives \(10y(x+1)=11x(y+1)\Rightarrow y=\frac{11x}{10-x}\). Reduced positive solution is only \((x,y)=(5,11)\), so count <span class="answer">1</span>.</div></div>
+  </div>
+
+  <div class="hw">
+    <span class="hwnum">H4</span><span class="pill">Extreme value</span>
+    <p style="color:var(--text);">Evaluate \(\dfrac{1^2-2^2+3^2-4^2+\cdots+99^2-100^2}{1+2+\cdots+100}\).</p>
+    <button class="btn ghost" onclick="rev('h4')">Reveal ▸</button>
+    <div class="reveal" id="h4"><div class="card prob">Numerator pairs to \(\sum_{k=1}^{50}((2k-1)^2-(2k)^2)=\sum_{k=1}^{50}(1-4k)=-5050\). Denominator is \(5050\). Value <span class="answer">-1</span>.</div></div>
+  </div>
+
+  <div class="hw">
+    <span class="hwnum">H5</span><span class="pill">Completing square</span>
+    <p style="color:var(--text);">Given \(x^2+x+1=0\), find \(x^3+2x^2+2x+2018\).</p>
+    <button class="btn ghost" onclick="rev('h5')">Reveal ▸</button>
+    <div class="reveal" id="h5"><div class="card prob">From \(x^2+x=-1\), expression \(=x^3+2(-1)+2018=x^3+2016\). Also \((x^2+x+1)(x-1)=x^3-1\Rightarrow x^3=1\). So <span class="answer">2017</span>.</div></div>
+  </div>
+
+  <div class="hw">
+    <span class="hwnum">H6</span><span class="pill">Squares</span>
+    <p style="color:var(--text);">How many integer pairs \((x,y)\) satisfy \(x^{70}+y^2=2y\)?</p>
+    <button class="btn ghost" onclick="rev('h6')">Reveal ▸</button>
+    <div class="reveal" id="h6"><div class="card prob">\(x^{70}+(y-1)^2=1\). Cases: \(x^{70}=0\Rightarrow x=0,y=0\) or \(2\); \(x^{70}=1\Rightarrow x=\pm1,y=1\). Total <span class="answer">4</span> pairs.</div></div>
+  </div>
+
+  <div class="hw">
+    <span class="hwnum">H7</span><span class="pill">SFFT</span>
+    <p style="color:var(--text);">Positive integers satisfy \(xy-4x-5y=14\). Find the sum of all possible \(x\).</p>
+    <button class="btn ghost" onclick="rev('h7')">Reveal ▸</button>
+    <div class="reveal" id="h7"><div class="card prob">\((x-5)(y-4)=34\). Positive divisors of \(34\): \(1,2,17,34\), so \(x=6,7,22,39\). Sum <span class="answer">74</span>.</div></div>
+  </div>
+
+  <div class="hw">
+    <span class="hwnum">H8</span><span class="pill">Quadratic in \(x^2\)</span>
+    <p style="color:var(--text);">For how many integers \(x\) is \(x^4-51x^2+50<0\)?</p>
+    <button class="btn ghost" onclick="rev('h8')">Reveal ▸</button>
+    <div class="reveal" id="h8"><div class="card prob">Let \(t=x^2\). Then \((t-1)(t-50)<0\Rightarrow 1&lt;t&lt;50\). Square values: \(4,9,16,25,36,49\), giving \(x=\pm2,\pm3,\pm4,\pm5,\pm6,\pm7\): <span class="answer">12</span> integers.</div></div>
+  </div>
+
+  <div class="hw">
+    <span class="hwnum">H9</span><span class="pill">System + geometry</span>
+    <p style="color:var(--text);">In an isosceles triangle, side lengths \(a,b\) satisfy \(9a^2-b^2=-13\), \(3a+b=13\). Find the third side.</p>
+    <button class="btn ghost" onclick="rev('h9')">Reveal ▸</button>
+    <div class="reveal" id="h9"><div class="card prob">From \(b=13-3a\): \(9a^2-(13-3a)^2=-13\Rightarrow a=2,b=7\). Isosceles side sets are \((7,7,2)\) or \((2,2,7)\); only first is valid. Third side is <span class="answer">7</span>.</div></div>
+  </div>
+
+  <hr class="div">
+
+  <h2 class="sec" id="cheat">Cheat Sheet</h2>
+  <div class="card">
+    <table class="cheat">
+      <tr><th>Concept</th><th>When to use</th><th>Key move</th></tr>
+      <tr><td>Grouping</td><td>4+ terms, no global GCF</td><td>Form pairs or a square-block + leftover</td></tr>
+      <tr><td>Splitting / adding</td><td>Expression is close to a pattern</td><td>Add/subtract to build \(A^2-B^2\)</td></tr>
+      <tr><td>SFFT</td><td>\(xy+ax+by\)-type integer equations</td><td>Complete to \((x+b)(y+a)\)</td></tr>
+      <tr><td>Extreme value</td><td>Least/greatest value problems</td><td>Convert to sum of squares + constant</td></tr>
+    </table>
+  </div>
+
+  <div class="card green" style="text-align:center;">
+    <p style="color:var(--text);margin-bottom:10px;">Regular lesson resources:</p>
+    <p>
+      <a class="btn" href="Factorization%20-%20Regular%20Practice%20Worksheet%20(Questions%20Only).html">Printable Questions</a>
+      <a class="btn ghost" href="Factorization%20-%20Regular%20Worked%20Lesson.md">Worked Notes</a>
+      <a class="btn ghost" href="AMC10%20Factiorization.pdf">Source PDF</a>
+    </p>
+  </div>
+
+  <div class="foot">Regular lesson built from AMC 10 AIME Camp Factorization PDF examples and homework types.</div>
+</div>
+
+<script>
+GP.ready(function(){ mj(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Factorization Worksheet (Questions Only)</title>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+:root{--text:#111827;--muted:#374151;--line:#d1d5db;--accent:#1d4ed8}
+*{box-sizing:border-box}
+body{font-family:"Times New Roman",Georgia,serif;color:var(--text);margin:0;background:#fff}
+.wrap{max-width:820px;margin:0 auto;padding:28px 26px 40px}
+h1{margin:0 0 6px;font-size:1.7rem}
+.sub{margin:0 0 16px;color:var(--muted);font-size:.98rem}
+.meta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.meta span{border:1px solid var(--line);padding:6px 10px;border-radius:6px;font-size:.9rem}
+hr{border:none;border-top:1px solid var(--line);margin:16px 0}
+.sec{font-size:1.12rem;margin:20px 0 8px;color:var(--accent)}
+.q{border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:10px 0}
+.q h3{margin:0 0 6px;font-size:1rem}
+.q p{margin:0;line-height:1.6}
+.space{height:44px;border-bottom:1px dashed var(--line);margin-top:10px}
+.small{font-size:.88rem;color:var(--muted)}
+.print-only{display:none}
+@media print{
+  .no-print{display:none !important}
+  .print-only{display:block}
+  .wrap{max-width:none;padding:12mm}
+  .q{break-inside:avoid}
+  a{color:inherit;text-decoration:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Factorization - Regular Worksheet</h1>
+  <p class="sub">2026 Spring AMC 10 AIME Camp Lesson 1-8 · Questions Only</p>
+  <div class="meta">
+    <span>Name: __________________________</span>
+    <span>Date: __________________</span>
+    <span>Class: __________________</span>
+  </div>
+  <p class="small">Directions: Factor fully unless told otherwise. For SFFT problems show the factored form and list integer pairs. For extreme-value problems show the completed square.</p>
+  <hr>
+
+  <h2 class="sec">Concept 1 - Factoring by Grouping</h2>
+  <div class="q">
+    <h3>1.</h3>
+    <p>Given \(a^2+2b^2+2c^2-2ab-2bc-6c+9=0\), find \(abc\).</p>
+    <div class="space"></div>
+  </div>
+  <div class="q">
+    <h3>2.</h3>
+    <p>Real numbers \(x,y\) satisfy \(x^2+y^2=10x-6y-34\). Find \(x+y\).</p>
+    <div class="space"></div>
+  </div>
+  <div class="q">
+    <h3>3.</h3>
+    <p>Find a factor of \(3^{n+2}-2^{n+3}+3^n-2^{n+1}\).</p>
+    <div class="space"></div>
+  </div>
+
+  <h2 class="sec">Concept 2 - Splitting &amp; Adding Terms</h2>
+  <div class="q">
+    <h3>4.</h3>
+    <p>Factor \(a^2-4a+3\).</p>
+    <div class="space"></div>
+  </div>
+  <div class="q">
+    <h3>5.</h3>
+    <p>Factor \(x^4+4\) by adding and subtracting terms.</p>
+    <div class="space"></div>
+  </div>
+
+  <h2 class="sec">Concept 3 - Simon's Favorite Factoring Trick</h2>
+  <div class="q">
+    <h3>6.</h3>
+    <p>Positive integers \(x,y\) satisfy \(xy-2x-3y=6\). Find the sum of all possible values of \(x\).</p>
+    <div class="space"></div>
+  </div>
+  <div class="q">
+    <h3>7.</h3>
+    <p>Positive integers \(x,y\) satisfy \(6xy-10x-21y=49\). Find all solution pairs \((x,y)\).</p>
+    <div class="space"></div>
+  </div>
+
+  <h2 class="sec">Concept 4 - Extreme Values by Completing Squares</h2>
+  <div class="q">
+    <h3>8.</h3>
+    <p>Find the least value of \(2x^2-4xy+4y^2+8y+11\).</p>
+    <div class="space"></div>
+  </div>
+  <div class="q">
+    <h3>9.</h3>
+    <p>Find the least value of \((x+1)(x+2)(x+3)(x+4)+2019\).</p>
+    <div class="space"></div>
+  </div>
+
+  <h2 class="sec">Homework from PDF Scope (Mixed)</h2>
+  <div class="q">
+    <h3>10.</h3>
+    <p>How many reduced positive fractions \(\frac{x}{y}\) have the property that increasing numerator and denominator by 1 increases the value by 10%?</p>
+    <div class="space"></div>
+  </div>
+
+  <div class="q">
+    <h3>11.</h3>
+    <p>Evaluate \(\dfrac{1^2-2^2+3^2-4^2+\cdots+99^2-100^2}{1+2+3+\cdots+100}\).</p>
+    <div class="space"></div>
+  </div>
+
+  <div class="q">
+    <h3>12.</h3>
+    <p>Given \(x^2+x+1=0\), compute \(x^3+2x^2+2x+2018\).</p>
+    <div class="space"></div>
+  </div>
+
+  <div class="q">
+    <h3>13.</h3>
+    <p>How many ordered pairs of integers \((x,y)\) satisfy \(x^{70}+y^2=2y\)?</p>
+    <div class="space"></div>
+  </div>
+
+  <div class="q">
+    <h3>14.</h3>
+    <p>Given positive integers \(x,y\), \(xy-4x-5y=14\). Find the sum of all possible values of \(x\).</p>
+    <div class="space"></div>
+  </div>
+
+  <div class="q">
+    <h3>15.</h3>
+    <p>For how many integers \(x\) is \(x^4-51x^2+50\) negative?</p>
+    <div class="space"></div>
+  </div>
+
+  <div class="q">
+    <h3>16.</h3>
+    <p>In an isosceles triangle, side lengths \(a,b\) satisfy \(9a^2-b^2=-13\) and \(3a+b=13\). What is the length of the third side?</p>
+    <div class="space"></div>
+  </div>
+
+  <hr>
+  <p class="small">Teacher copy with solutions: <span class="no-print">see the Homework from the PDF Scope section in Factorization - Regular Lesson.html.</span></p>
+  <p class="print-only small">End of worksheet.</p>
+</div>
+</body>
+</html>
